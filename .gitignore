@@ -1,0 +1,21 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# .NET build outputs
+**/bin/
+**/obj/
+
+# Logs
+*.log
+
+# Local runtime/cache files
+**/font_index_cache.db
+**/config.ini
+
+# OS files
+.DS_Store
+Thumbs.db
