@@ -22,7 +22,7 @@ It parses ASS subtitles, matches fonts, subsets fonts, rewrites subtitle font na
 - `--subtitle-language <code>`, `-s` (default: `chi`)
 - `--pyftsubset-bin <path>`, `-y`
 
-## Default Config (`config.ini`)
+## Default Config
 
 On first run, the app creates `config.ini` in the executable directory.
 Use it to set defaults for `mkvmerge-bin`, `font-directory`, and `pyftsubset-bin`.
@@ -36,6 +36,12 @@ mkvmerge-bin=D:\Program Files\MKVToolNix\mkvmerge.exe
 font-directory=H:\Fonts;H:\MoreFonts
 pyftsubset-bin=C:\Python\Scripts\pyftsubset.exe
 ```
+
+## Example
+
+Run `MkvFontMux.exe "[DMG&VCB-Studio] Shingeki no Kyojin Season 2 [Ma10p_1080p]" -d Fonts`
+
+![Example](Example.png)
 
 ## Notes
 
