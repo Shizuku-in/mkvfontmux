@@ -1,0 +1,64 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Publish (win-x64, single-file, self-contained)
+        shell: pwsh
+        run: |
+          dotnet publish .\MkvFontMux\MkvFontMux.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            /p:PublishSingleFile=true `
+            /p:PublishTrimmed=false `
+            -o .\release\publish
+
+      - name: Prepare release package
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}"
+          $packageRoot = ".\release\package"
+          $zipPath = ".\release\mkvfontmux-$version-win-x64.zip"
+
+          New-Item -ItemType Directory -Path $packageRoot -Force | Out-Null
+          Copy-Item ".\release\publish\MkvFontMux.exe" "$packageRoot\MkvFontMux.exe" -Force
+
+          if (Test-Path ".\README.md") { Copy-Item ".\README.md" "$packageRoot\README.md" -Force }
+          if (Test-Path ".\LICENSE") { Copy-Item ".\LICENSE" "$packageRoot\LICENSE" -Force }
+
+          @"
+          # MkvFontMux default settings
+          # Use ';' to separate multiple directories.
+          mkvmerge-bin=
+          font-directory=
+          pyftsubset-bin=
+          "@ | Set-Content "$packageRoot\config.ini" -Encoding UTF8
+
+          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
+          Compress-Archive -Path "$packageRoot\*" -DestinationPath $zipPath
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: .\release\mkvfontmux-${{ github.ref_name }}-win-x64.zip
+          generate_release_notes: true
