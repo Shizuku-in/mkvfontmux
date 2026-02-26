@@ -57,14 +57,14 @@ jobs:
         shell: pwsh
         run: |
           $version = "${{ github.ref_name }}"
-          $packageRoot = ".\release\package"
-          $zipPath = ".\release\mkvfontmux-$version-win-x64.zip"
+          $packageRoot = "./release/package"
+          $zipPath = "./release/mkvfontmux-$version-win-x64.zip"
 
           New-Item -ItemType Directory -Path $packageRoot -Force | Out-Null
           Copy-Item ".\release\publish\MkvFontMux.exe" "$packageRoot\MkvFontMux.exe" -Force
 
-          if (Test-Path ".\README.md") { Copy-Item ".\README.md" "$packageRoot\README.md" -Force }
-          if (Test-Path ".\LICENSE") { Copy-Item ".\LICENSE" "$packageRoot\LICENSE" -Force }
+          if (Test-Path "./README.md") { Copy-Item "./README.md" "$packageRoot/README.md" -Force }
+          if (Test-Path "./LICENSE") { Copy-Item "./LICENSE" "$packageRoot/LICENSE" -Force }
 
           @"
           # MkvFontMux default settings
@@ -72,13 +72,23 @@ jobs:
           mkvmerge-bin=
           font-directory=
           pyftsubset-bin=
-          "@ | Set-Content "$packageRoot\config.ini" -Encoding UTF8
+          "@ | Set-Content "$packageRoot/config.ini" -Encoding UTF8
 
           if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
-          Compress-Archive -Path "$packageRoot\*" -DestinationPath $zipPath
+          Compress-Archive -Path "$packageRoot/*" -DestinationPath $zipPath
+
+          if (-not (Test-Path $zipPath)) {
+            throw "Release package not found: $zipPath"
+          }
+
+      - name: Verify release outputs
+        shell: pwsh
+        run: |
+          Get-ChildItem ./release -Recurse | Select-Object FullName, Length
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: .\release\mkvfontmux-${{ github.ref_name }}-win-x64.zip
+          files: ./release/mkvfontmux-${{ github.ref_name }}-win-x64.zip
+          fail_on_unmatched_files: true
           generate_release_notes: true
