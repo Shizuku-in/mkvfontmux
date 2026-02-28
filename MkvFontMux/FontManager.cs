@@ -237,13 +237,81 @@ internal sealed class FontManager(IReadOnlyList<string>? customDirectories = nul
 
             if (!addedAny)
             {
-                AppLogger.Warning($"Skipped unreadable font: {filePath} (index={fontIndex})");
+                var fallbackAdded = TryRegisterFallbackNamesFromFileName(filePath, fontIndex, parsedEntries);
+                if (fallbackAdded)
+                {
+                    AppLogger.Warning($"Unreadable font table, fallback to filename aliases: {filePath} (index={fontIndex})");
+                }
+                else
+                {
+                    AppLogger.Warning($"Skipped unreadable font: {filePath} (index={fontIndex})");
+                }
             }
         }
         catch (Exception ex)
         {
-            AppLogger.Warning($"Failed to register font: {filePath} (index={fontIndex}) - {ex.Message}");
+            var fallbackAdded = TryRegisterFallbackNamesFromFileName(filePath, fontIndex, parsedEntries);
+            if (fallbackAdded)
+            {
+                AppLogger.Warning($"Failed to read font table, fallback to filename aliases: {filePath} (index={fontIndex}) - {ex.Message}");
+            }
+            else
+            {
+                AppLogger.Warning($"Failed to register font: {filePath} (index={fontIndex}) - {ex.Message}");
+            }
         }
+    }
+
+    private bool TryRegisterFallbackNamesFromFileName(string filePath, int fontIndex, List<CachedFontEntry> parsedEntries)
+    {
+        var baseName = Path.GetFileNameWithoutExtension(filePath).Trim();
+        if (string.IsNullOrWhiteSpace(baseName))
+        {
+            return false;
+        }
+
+        var candidates = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            baseName
+        };
+
+        foreach (var part in baseName.Split(['&', '＆'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            if (string.IsNullOrWhiteSpace(part))
+            {
+                continue;
+            }
+
+            candidates.Add(part);
+
+            if (part.EndsWith("(P)", StringComparison.OrdinalIgnoreCase) && part.Length > 3)
+            {
+                candidates.Add(part[..^3].Trim());
+            }
+            else if (part.EndsWith("P", StringComparison.OrdinalIgnoreCase) && part.Length > 1)
+            {
+                candidates.Add(part[..^1].Trim());
+            }
+        }
+
+        var added = false;
+        foreach (var name in candidates)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                continue;
+            }
+
+            RegisterName(name, filePath, fontIndex);
+            parsedEntries.Add(new CachedFontEntry
+            {
+                FontIndex = fontIndex,
+                Name = name
+            });
+            added = true;
+        }
+
+        return added;
     }
 
     private static IEnumerable<string> ReadFontNames(string filePath, int fontIndex)
