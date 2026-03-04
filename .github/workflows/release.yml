@@ -14,7 +14,6 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,10 +27,15 @@ jobs:
         shell: pwsh
         run: dotnet build .\MkvFontMux.slnx -c Release
 
-  release:
+  publish_packages:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: windows-latest
     needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        rid: [win-x64, win-x86]
+        mode: [scd, fdd]
 
     steps:
       - name: Checkout
@@ -42,110 +46,70 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Publish (win-x64/win-x86, self-contained + framework-dependent)
-        shell: pwsh
-        run: |
-          foreach ($rid in @("win-x64", "win-x86")) {
-            dotnet publish .\MkvFontMux.Console\MkvFontMux.Console.csproj `
-              -c Release `
-              -r $rid `
-              --self-contained true `
-              /p:PublishSingleFile=true `
-              /p:PublishTrimmed=false `
-              -o ".\release\publish\console-scd\$rid"
-
-            dotnet publish .\MkvFontMux.Gui\MkvFontMux.Gui.csproj `
-              -c Release `
-              -r $rid `
-              --self-contained true `
-              /p:PublishSingleFile=true `
-              /p:PublishTrimmed=false `
-              -o ".\release\publish\gui-scd\$rid"
-
-            dotnet publish .\MkvFontMux.Console\MkvFontMux.Console.csproj `
-              -c Release `
-              -r $rid `
-              --self-contained false `
-              /p:PublishSingleFile=true `
-              /p:PublishTrimmed=false `
-              -o ".\release\publish\console-fdd\$rid"
-
-            dotnet publish .\MkvFontMux.Gui\MkvFontMux.Gui.csproj `
-              -c Release `
-              -r $rid `
-              --self-contained false `
-              /p:PublishSingleFile=true `
-              /p:PublishTrimmed=false `
-              -o ".\release\publish\gui-fdd\$rid"
-          }
-
-      - name: Prepare release package
+      - name: Publish and Prepare Package
         shell: pwsh
         run: |
           $version = "${{ github.ref_name }}"
-          foreach ($rid in @("win-x64", "win-x86")) {
-            foreach ($mode in @("scd", "fdd")) {
-              $consoleRoot = "./release/package-console-$mode-$rid"
-              $guiRoot = "./release/package-gui-$mode-$rid"
-              $consoleZipPath = "./release/mkvfontmux-console-$mode-$version-$rid.zip"
-              $guiZipPath = "./release/mkvfontmux-gui-$mode-$version-$rid.zip"
+          $rid = "${{ matrix.rid }}"
+          $mode = "${{ matrix.mode }}"
+          
+          $isScd = if ($mode -eq 'scd') { "true" } else { "false" }
 
-              New-Item -ItemType Directory -Path $consoleRoot -Force | Out-Null
-              New-Item -ItemType Directory -Path $guiRoot -Force | Out-Null
+          dotnet publish .\MkvFontMux.Console\MkvFontMux.Console.csproj `
+            -c Release -r $rid --self-contained $isScd `
+            /p:PublishSingleFile=true /p:PublishTrimmed=false `
+            -o ".\publish-temp\console"
 
-              Copy-Item ".\release\publish\console-$mode\$rid\MkvFontMux.exe" "$consoleRoot\MkvFontMux.exe" -Force
-              Copy-Item ".\release\publish\gui-$mode\$rid\MkvFontMux.Gui.exe" "$guiRoot\MkvFontMux.Gui.exe" -Force
+          dotnet publish .\MkvFontMux.Gui\MkvFontMux.Gui.csproj `
+            -c Release -r $rid --self-contained $isScd `
+            /p:PublishSingleFile=true /p:PublishTrimmed=false `
+            -o ".\publish-temp\gui"
 
-              if (Test-Path "./README.md") {
-                Copy-Item "./README.md" "$consoleRoot/README.md" -Force
-                Copy-Item "./README.md" "$guiRoot/README.md" -Force
-              }
-
-              if (Test-Path "./LICENSE") {
-                Copy-Item "./LICENSE" "$consoleRoot/LICENSE" -Force
-                Copy-Item "./LICENSE" "$guiRoot/LICENSE" -Force
-              }
-
-              @"
-              # MkvFontMux default settings
-              # Use ';' to separate multiple directories.
-              mkvmerge-bin=
-              font-directory=
-              pyftsubset-bin=
-              "@ | Set-Content "$consoleRoot/config.ini" -Encoding UTF8
-
-              if (Test-Path $consoleZipPath) { Remove-Item $consoleZipPath -Force }
-              if (Test-Path $guiZipPath) { Remove-Item $guiZipPath -Force }
-
-              Compress-Archive -Path "$consoleRoot/*" -DestinationPath $consoleZipPath
-              Compress-Archive -Path "$guiRoot/*" -DestinationPath $guiZipPath
-
-              if (-not (Test-Path $consoleZipPath)) {
-                throw "Console release package not found: $consoleZipPath"
-              }
-
-              if (-not (Test-Path $guiZipPath)) {
-                throw "GUI release package not found: $guiZipPath"
-              }
-            }
+          foreach ($app in @("console", "gui")) {
+            if (Test-Path "./README.md") { Copy-Item "./README.md" ".\publish-temp\$app\README.md" -Force }
+            if (Test-Path "./LICENSE") { Copy-Item "./LICENSE" ".\publish-temp\$app\LICENSE" -Force }
           }
 
-      - name: Verify release outputs
-        shell: pwsh
+          @"
+          # MkvFontMux default settings
+          # Use ';' to separate multiple directories.
+          mkvmerge-bin=
+          font-directory=
+          pyftsubset-bin=
+          "@ | Set-Content ".\publish-temp\console\config.ini" -Encoding UTF8
+
+          Compress-Archive -Path ".\publish-temp\console\*" -DestinationPath ".\mkvfontmux-console-$mode-$version-$rid.zip"
+          Compress-Archive -Path ".\publish-temp\gui\*" -DestinationPath ".\mkvfontmux-gui-$mode-$version-$rid.zip"
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages-${{ matrix.mode }}-${{ matrix.rid }}
+          path: ./*.zip
+          retention-days: 1
+
+  create_release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    needs: publish_packages
+    steps:
+      - name: Download all package artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          merge-multiple: true
+
+      - name: Generate SHA256 Checksums
+        working-directory: release-artifacts
         run: |
-          Get-ChildItem ./release -Recurse | Select-Object FullName, Length
+          sha256sum *.zip > sha256sums.txt
+          cat sha256sums.txt
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ./release/mkvfontmux-console-scd-${{ github.ref_name }}-win-x64.zip
-            ./release/mkvfontmux-gui-scd-${{ github.ref_name }}-win-x64.zip
-            ./release/mkvfontmux-console-scd-${{ github.ref_name }}-win-x86.zip
-            ./release/mkvfontmux-gui-scd-${{ github.ref_name }}-win-x86.zip
-            ./release/mkvfontmux-console-fdd-${{ github.ref_name }}-win-x64.zip
-            ./release/mkvfontmux-gui-fdd-${{ github.ref_name }}-win-x64.zip
-            ./release/mkvfontmux-console-fdd-${{ github.ref_name }}-win-x86.zip
-            ./release/mkvfontmux-gui-fdd-${{ github.ref_name }}-win-x86.zip
+            release-artifacts/*.zip
+            release-artifacts/sha256sums.txt
           fail_on_unmatched_files: true
           generate_release_notes: true
