@@ -26,7 +26,7 @@ jobs:
 
       - name: Build
         shell: pwsh
-        run: dotnet build .\MkvFontMux\MkvFontMux.csproj -c Release
+        run: dotnet build .\MkvFontMux.slnx -c Release
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -42,43 +42,92 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Publish (win-x64, single-file, self-contained)
+      - name: Publish (win-x64/win-x86, self-contained + framework-dependent)
         shell: pwsh
         run: |
-          dotnet publish .\MkvFontMux\MkvFontMux.csproj `
-            -c Release `
-            -r win-x64 `
-            --self-contained true `
-            /p:PublishSingleFile=true `
-            /p:PublishTrimmed=false `
-            -o .\release\publish
+          foreach ($rid in @("win-x64", "win-x86")) {
+            dotnet publish .\MkvFontMux.Console\MkvFontMux.Console.csproj `
+              -c Release `
+              -r $rid `
+              --self-contained true `
+              /p:PublishSingleFile=true `
+              /p:PublishTrimmed=false `
+              -o ".\release\publish\console-scd\$rid"
+
+            dotnet publish .\MkvFontMux.Gui\MkvFontMux.Gui.csproj `
+              -c Release `
+              -r $rid `
+              --self-contained true `
+              /p:PublishSingleFile=true `
+              /p:PublishTrimmed=false `
+              -o ".\release\publish\gui-scd\$rid"
+
+            dotnet publish .\MkvFontMux.Console\MkvFontMux.Console.csproj `
+              -c Release `
+              -r $rid `
+              --self-contained false `
+              /p:PublishSingleFile=true `
+              /p:PublishTrimmed=false `
+              -o ".\release\publish\console-fdd\$rid"
+
+            dotnet publish .\MkvFontMux.Gui\MkvFontMux.Gui.csproj `
+              -c Release `
+              -r $rid `
+              --self-contained false `
+              /p:PublishSingleFile=true `
+              /p:PublishTrimmed=false `
+              -o ".\release\publish\gui-fdd\$rid"
+          }
 
       - name: Prepare release package
         shell: pwsh
         run: |
           $version = "${{ github.ref_name }}"
-          $packageRoot = "./release/package"
-          $zipPath = "./release/mkvfontmux-$version-win-x64.zip"
+          foreach ($rid in @("win-x64", "win-x86")) {
+            foreach ($mode in @("scd", "fdd")) {
+              $consoleRoot = "./release/package-console-$mode-$rid"
+              $guiRoot = "./release/package-gui-$mode-$rid"
+              $consoleZipPath = "./release/mkvfontmux-console-$mode-$version-$rid.zip"
+              $guiZipPath = "./release/mkvfontmux-gui-$mode-$version-$rid.zip"
 
-          New-Item -ItemType Directory -Path $packageRoot -Force | Out-Null
-          Copy-Item ".\release\publish\MkvFontMux.exe" "$packageRoot\MkvFontMux.exe" -Force
+              New-Item -ItemType Directory -Path $consoleRoot -Force | Out-Null
+              New-Item -ItemType Directory -Path $guiRoot -Force | Out-Null
 
-          if (Test-Path "./README.md") { Copy-Item "./README.md" "$packageRoot/README.md" -Force }
-          if (Test-Path "./LICENSE") { Copy-Item "./LICENSE" "$packageRoot/LICENSE" -Force }
+              Copy-Item ".\release\publish\console-$mode\$rid\MkvFontMux.exe" "$consoleRoot\MkvFontMux.exe" -Force
+              Copy-Item ".\release\publish\gui-$mode\$rid\MkvFontMux.Gui.exe" "$guiRoot\MkvFontMux.Gui.exe" -Force
 
-          @"
-          # MkvFontMux default settings
-          # Use ';' to separate multiple directories.
-          mkvmerge-bin=
-          font-directory=
-          pyftsubset-bin=
-          "@ | Set-Content "$packageRoot/config.ini" -Encoding UTF8
+              if (Test-Path "./README.md") {
+                Copy-Item "./README.md" "$consoleRoot/README.md" -Force
+                Copy-Item "./README.md" "$guiRoot/README.md" -Force
+              }
 
-          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
-          Compress-Archive -Path "$packageRoot/*" -DestinationPath $zipPath
+              if (Test-Path "./LICENSE") {
+                Copy-Item "./LICENSE" "$consoleRoot/LICENSE" -Force
+                Copy-Item "./LICENSE" "$guiRoot/LICENSE" -Force
+              }
 
-          if (-not (Test-Path $zipPath)) {
-            throw "Release package not found: $zipPath"
+              @"
+              # MkvFontMux default settings
+              # Use ';' to separate multiple directories.
+              mkvmerge-bin=
+              font-directory=
+              pyftsubset-bin=
+              "@ | Set-Content "$consoleRoot/config.ini" -Encoding UTF8
+
+              if (Test-Path $consoleZipPath) { Remove-Item $consoleZipPath -Force }
+              if (Test-Path $guiZipPath) { Remove-Item $guiZipPath -Force }
+
+              Compress-Archive -Path "$consoleRoot/*" -DestinationPath $consoleZipPath
+              Compress-Archive -Path "$guiRoot/*" -DestinationPath $guiZipPath
+
+              if (-not (Test-Path $consoleZipPath)) {
+                throw "Console release package not found: $consoleZipPath"
+              }
+
+              if (-not (Test-Path $guiZipPath)) {
+                throw "GUI release package not found: $guiZipPath"
+              }
+            }
           }
 
       - name: Verify release outputs
@@ -89,6 +138,14 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ./release/mkvfontmux-${{ github.ref_name }}-win-x64.zip
+          files: |
+            ./release/mkvfontmux-console-scd-${{ github.ref_name }}-win-x64.zip
+            ./release/mkvfontmux-gui-scd-${{ github.ref_name }}-win-x64.zip
+            ./release/mkvfontmux-console-scd-${{ github.ref_name }}-win-x86.zip
+            ./release/mkvfontmux-gui-scd-${{ github.ref_name }}-win-x86.zip
+            ./release/mkvfontmux-console-fdd-${{ github.ref_name }}-win-x64.zip
+            ./release/mkvfontmux-gui-fdd-${{ github.ref_name }}-win-x64.zip
+            ./release/mkvfontmux-console-fdd-${{ github.ref_name }}-win-x86.zip
+            ./release/mkvfontmux-gui-fdd-${{ github.ref_name }}-win-x86.zip
           fail_on_unmatched_files: true
           generate_release_notes: true

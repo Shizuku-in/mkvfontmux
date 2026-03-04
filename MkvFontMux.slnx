@@ -4,5 +4,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="MkvFontMux/MkvFontMux.csproj" />
+  <Project Path="MkvFontMux.Core/MkvFontMux.Core.csproj" />
+  <Project Path="MkvFontMux.Gui/MkvFontMux.Gui.csproj" />
+  <Project Path="MkvFontMux.Console/MkvFontMux.Console.csproj" />
 </Solution>

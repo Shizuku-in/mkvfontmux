@@ -1,8 +1,6 @@
-using Spectre.Console;
-
 namespace MkvFontMux;
 
-internal sealed class CliOptions(
+public sealed class CliOptions(
     DirectoryInfo workDirectory,
     string? mkvmergeBin,
     bool forceMatch,
@@ -159,17 +157,17 @@ internal sealed class CliOptions(
 
     public static void PrintHelp()
     {
-        AnsiConsole.MarkupLine("[bold]Usage:[/] MkvFontMux <dir> [[options]]");
-        AnsiConsole.MarkupLine("  --mkvmerge-bin <path>, -m   Path to mkvmerge executable");
-        AnsiConsole.MarkupLine("  --force-match, -f           Force exact font name matching");
-        AnsiConsole.MarkupLine("  --font-directory <d1;d2>, -d Custom font scan directories");
-        AnsiConsole.MarkupLine("  --disable-subset, -n        Disable font subsetting");
-        AnsiConsole.MarkupLine("  --save-log, -l              Save logs to mux.log");
-        AnsiConsole.MarkupLine("  --overwrite, -o             Overwrite source MKV");
-        AnsiConsole.MarkupLine("  --remove-temp, -r           Remove temporary files");
-        AnsiConsole.MarkupLine("  --only-print-matchfont, -p  Report font matching only");
-        AnsiConsole.MarkupLine("  --subtitle-language <code>, -s Language code for ASS tracks (default: chi)");
-        AnsiConsole.MarkupLine("  --pyftsubset-bin <path>, -y Optional pyftsubset executable path");
-        AnsiConsole.MarkupLine("  defaults from exe-dir config.ini: mkvmerge-bin/font-directory/pyftsubset-bin");
+        Console.WriteLine("Usage: MkvFontMux <dir> [options]");
+        Console.WriteLine("  --mkvmerge-bin <path>, -m   Path to mkvmerge executable");
+        Console.WriteLine("  --force-match, -f           Force exact font name matching");
+        Console.WriteLine("  --font-directory <d1;d2>, -d Custom font scan directories");
+        Console.WriteLine("  --disable-subset, -n        Disable font subsetting");
+        Console.WriteLine("  --save-log, -l              Save logs to mux.log");
+        Console.WriteLine("  --overwrite, -o             Overwrite source MKV");
+        Console.WriteLine("  --remove-temp, -r           Remove temporary files");
+        Console.WriteLine("  --only-print-matchfont, -p  Report font matching only");
+        Console.WriteLine("  --subtitle-language <code>, -s Language code for ASS tracks (default: chi)");
+        Console.WriteLine("  --pyftsubset-bin <path>, -y Optional pyftsubset executable path");
+        Console.WriteLine("  defaults from exe-dir config.ini: mkvmerge-bin/font-directory/pyftsubset-bin");
     }
 }

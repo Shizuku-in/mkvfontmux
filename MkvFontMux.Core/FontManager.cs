@@ -1,4 +1,3 @@
-using Spectre.Console;
 using System.Buffers.Binary;
 using System.Text;
 
@@ -25,49 +24,32 @@ internal sealed class FontManager(IReadOnlyList<string>? customDirectories = nul
         var cacheHit = 0;
         var cacheMiss = 0;
 
-        await AnsiConsole.Progress()
-            .AutoRefresh(true)
-            .HideCompleted(true)
-            .Columns(new ProgressColumn[]
+        foreach (var dir in targetDirectories)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (string.IsNullOrWhiteSpace(dir) || !Directory.Exists(dir))
             {
-                new SpinnerColumn(),
-                new TaskDescriptionColumn()
-            })
-            .StartAsync(async context =>
-            {
-                var task = context.AddTask("[cyan]Scanning fonts...[/]", maxValue: 100);
+                continue;
+            }
 
-                foreach (var dir in targetDirectories)
+            await foreach (var fontPath in EnumerateFontFilesAsync(dir, cancellationToken))
+            {
+                scannedFiles.Add(fontPath);
+                if (TryProcessFromCache(cache, fontPath))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    if (string.IsNullOrWhiteSpace(dir) || !Directory.Exists(dir))
-                    {
-                        continue;
-                    }
-
-                    await foreach (var fontPath in EnumerateFontFilesAsync(dir, cancellationToken))
-                    {
-                        scannedFiles.Add(fontPath);
-                        if (TryProcessFromCache(cache, fontPath))
-                        {
-                            cacheHit++;
-                        }
-                        else
-                        {
-                            ProcessFontFile(fontPath, cache);
-                            cacheMiss++;
-                        }
-
-                        task.Description = $"[cyan]Fonts indexed: {_fontMap.Count} names...[/]";
-                    }
+                    cacheHit++;
                 }
-            });
+                else
+                {
+                    ProcessFontFile(fontPath, cache);
+                    cacheMiss++;
+                }
+            }
+        }
 
         cache.RemoveUnscanned(scannedFiles);
         cache.Save(CachePath);
         AppLogger.Info($"Font index cache: hit={cacheHit}, miss={cacheMiss}, files={scannedFiles.Count}");
-
-        AnsiConsole.MarkupLine($"[green][[OK]][/] Font index built: [bold cyan]{_fontMap.Count}[/] names.");
     }
 
     public FontMatch? FindFont(string assName)

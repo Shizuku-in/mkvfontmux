@@ -7,10 +7,9 @@ internal static class MkvMuxer
     public static async Task<(bool Success, string? ErrorText)> MuxAsync(
         string mkvmergeBin,
         string mkvPath,
-        IReadOnlyList<string> rewrittenAssFiles,
+        IReadOnlyList<(string FilePath, string LanguageCode)> assTracks,
         IReadOnlyList<FontAttachment> attachments,
-        string outPath,
-        string subtitleLanguage)
+        string outPath)
     {
         var psi = new ProcessStartInfo
         {
@@ -25,11 +24,11 @@ internal static class MkvMuxer
         psi.ArgumentList.Add(outPath);
         psi.ArgumentList.Add(mkvPath);
 
-        foreach (var ass in rewrittenAssFiles)
+        foreach (var assTrack in assTracks)
         {
             psi.ArgumentList.Add("--language");
-            psi.ArgumentList.Add($"0:{subtitleLanguage}");
-            psi.ArgumentList.Add(ass);
+            psi.ArgumentList.Add($"0:{assTrack.LanguageCode}");
+            psi.ArgumentList.Add(assTrack.FilePath);
         }
 
         foreach (var item in attachments)

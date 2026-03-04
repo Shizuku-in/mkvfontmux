@@ -19,12 +19,12 @@ It parses ASS subtitles, matches fonts, subsets fonts, rewrites subtitle font na
 - `--overwrite`, `-o`
 - `--remove-temp`, `-r`
 - `--only-print-matchfont`, `-p`
-- `--subtitle-language <code>`, `-s` (default: `chi`)
+- `--subtitle-language <code>`, `-s` (default/fallback: `chi`; ASS filename keyword auto-detect supports Simplified Chinese: `sc/chs/zhs/zh-cn/gb/gbk/...`, Traditional Chinese: `tc/cht/zht/zh-tw/big5/...`, English: `en/eng/...`, Japanese: `jpn/ja/jp/...`)
 - `--pyftsubset-bin <path>`, `-y`
 
 ## Default Config
 
-On first run, the app creates `config.ini` in the executable directory.
+On first run, the **CLI app** creates `config.ini` in the executable directory.
 Use it to set defaults for `mkvmerge-bin`, `font-directory`, and `pyftsubset-bin`.
 
 Example:
@@ -41,7 +41,22 @@ pyftsubset-bin=C:\Python\Scripts\pyftsubset.exe
 
 Run `MkvFontMux.exe "[DMG&VCB-Studio] Shingeki no Kyojin Season 2 [Ma10p_1080p]" -d Fonts`
 
+Or build and run from source:
+
+```powershell
+dotnet run --project MkvFontMux.Console -- "[DMG&VCB-Studio] Shingeki no Kyojin Season 2 [Ma10p_1080p]" -d Fonts
+```
+
 ![Example](Example.png)
+
+## GUI
+
+Build and run from source:
+
+```powershell
+dotnet build MkvFontMux.sln -c Debug
+dotnet run --project MkvFontMux.Gui
+```
 
 ## Notes
 

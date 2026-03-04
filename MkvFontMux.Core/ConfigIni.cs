@@ -1,11 +1,11 @@
 namespace MkvFontMux;
 
-internal sealed record AppDefaults(string? MkvmergeBin, string? FontDirectory, string? PyftsubsetBin)
+public sealed record AppDefaults(string? MkvmergeBin, string? FontDirectory, string? PyftsubsetBin)
 {
     public static readonly AppDefaults Empty = new(null, null, null);
 }
 
-internal static class ConfigIni
+public static class ConfigIni
 {
     private const string ConfigFileName = "config.ini";
 
