@@ -52,18 +52,27 @@ jobs:
           $version = "${{ github.ref_name }}"
           $rid = "${{ matrix.rid }}"
           $mode = "${{ matrix.mode }}"
+          $consoleTemp = ".\publish-temp\console"
+          $guiTemp = ".\publish-temp\gui"
+          $consoleZip = ".\mkvfontmux-console-$version-$rid-$mode.zip"
+          $guiZip = ".\mkvfontmux-gui-$version-$rid-$mode.zip"
           
           $isScd = if ($mode -eq 'scd') { "true" } else { "false" }
+
+          if (Test-Path $consoleTemp) { Remove-Item $consoleTemp -Recurse -Force }
+          if (Test-Path $guiTemp) { Remove-Item $guiTemp -Recurse -Force }
+          if (Test-Path $consoleZip) { Remove-Item $consoleZip -Force }
+          if (Test-Path $guiZip) { Remove-Item $guiZip -Force }
 
           dotnet publish .\MkvFontMux.Console\MkvFontMux.Console.csproj `
             -c Release -r $rid --self-contained $isScd `
             /p:PublishSingleFile=true /p:PublishTrimmed=false `
-            -o ".\publish-temp\console"
+            -o $consoleTemp
 
           dotnet publish .\MkvFontMux.Gui\MkvFontMux.Gui.csproj `
             -c Release -r $rid --self-contained $isScd `
             /p:PublishSingleFile=true /p:PublishTrimmed=false `
-            -o ".\publish-temp\gui"
+            -o $guiTemp
 
           foreach ($app in @("console", "gui")) {
             if (Test-Path "./README.md") { Copy-Item "./README.md" ".\publish-temp\$app\README.md" -Force }
@@ -78,8 +87,8 @@ jobs:
           pyftsubset-bin=
           "@ | Set-Content ".\publish-temp\console\config.ini" -Encoding UTF8
 
-          Compress-Archive -Path ".\publish-temp\console\*" -DestinationPath ".\mkvfontmux-console-$mode-$version-$rid.zip"
-          Compress-Archive -Path ".\publish-temp\gui\*" -DestinationPath ".\mkvfontmux-gui-$mode-$version-$rid.zip"
+          Compress-Archive -Path ".\publish-temp\console\*" -DestinationPath $consoleZip
+          Compress-Archive -Path ".\publish-temp\gui\*" -DestinationPath $guiZip
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -99,17 +108,10 @@ jobs:
           path: release-artifacts
           merge-multiple: true
 
-      - name: Generate SHA256 Checksums
-        working-directory: release-artifacts
-        run: |
-          sha256sum *.zip > sha256sums.txt
-          cat sha256sums.txt
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             release-artifacts/*.zip
-            release-artifacts/sha256sums.txt
           fail_on_unmatched_files: true
           generate_release_notes: true
