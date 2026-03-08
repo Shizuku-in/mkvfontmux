@@ -39,19 +39,39 @@
         </StackPanel>
 
         <TextBlock x:Name="WorkDirLabel" Grid.Row="2" Grid.Column="0" Text="工作目录" VerticalAlignment="Center"/>
-        <TextBox x:Name="WorkDirTextBox" Grid.Row="2" Grid.Column="1" Margin="6,4"/>
+        <TextBox x:Name="WorkDirTextBox" Grid.Row="2" Grid.Column="1" Margin="6,4"
+                 AllowDrop="True"
+                 PreviewDragEnter="PathTextBox_PreviewDragEnter"
+                 PreviewDragOver="PathTextBox_PreviewDragOver"
+                 PreviewDragLeave="PathTextBox_PreviewDragLeave"
+                 Drop="WorkDirTextBox_Drop"/>
         <Button x:Name="BrowseWorkDirButton" Grid.Row="2" Grid.Column="2" Margin="6,4" Content="浏览" Click="BrowseWorkDir_Click"/>
 
         <TextBlock x:Name="FontDirsLabel" Grid.Row="3" Grid.Column="0" Text="字体目录(;分隔)" VerticalAlignment="Center"/>
-        <TextBox x:Name="FontDirsTextBox" Grid.Row="3" Grid.Column="1" Margin="6,4"/>
+        <TextBox x:Name="FontDirsTextBox" Grid.Row="3" Grid.Column="1" Margin="6,4"
+                 AllowDrop="True"
+                 PreviewDragEnter="PathTextBox_PreviewDragEnter"
+                 PreviewDragOver="PathTextBox_PreviewDragOver"
+                 PreviewDragLeave="PathTextBox_PreviewDragLeave"
+                 Drop="FontDirsTextBox_Drop"/>
         <Button x:Name="BrowseFontDirButton" Grid.Row="3" Grid.Column="2" Margin="6,4" Content="浏览" Click="BrowseFontDir_Click"/>
 
         <TextBlock x:Name="MkvmergeLabel" Grid.Row="4" Grid.Column="0" Text="mkvmerge 路径(可选)" VerticalAlignment="Center"/>
-        <TextBox x:Name="MkvmergeTextBox" Grid.Row="4" Grid.Column="1" Margin="6,4"/>
+        <TextBox x:Name="MkvmergeTextBox" Grid.Row="4" Grid.Column="1" Margin="6,4"
+                 AllowDrop="True"
+                 PreviewDragEnter="PathTextBox_PreviewDragEnter"
+                 PreviewDragOver="PathTextBox_PreviewDragOver"
+                 PreviewDragLeave="PathTextBox_PreviewDragLeave"
+                 Drop="MkvmergeTextBox_Drop"/>
         <Button x:Name="BrowseMkvmergeButton" Grid.Row="4" Grid.Column="2" Margin="6,4" Content="浏览" Click="BrowseMkvmerge_Click"/>
 
         <TextBlock x:Name="PyftsubsetLabel" Grid.Row="5" Grid.Column="0" Text="pyftsubset 路径(可选)" VerticalAlignment="Center"/>
-        <TextBox x:Name="PyftsubsetTextBox" Grid.Row="5" Grid.Column="1" Margin="6,4"/>
+        <TextBox x:Name="PyftsubsetTextBox" Grid.Row="5" Grid.Column="1" Margin="6,4"
+                 AllowDrop="True"
+                 PreviewDragEnter="PathTextBox_PreviewDragEnter"
+                 PreviewDragOver="PathTextBox_PreviewDragOver"
+                 PreviewDragLeave="PathTextBox_PreviewDragLeave"
+                 Drop="PyftsubsetTextBox_Drop"/>
         <Button x:Name="BrowsePyftsubsetButton" Grid.Row="5" Grid.Column="2" Margin="6,4" Content="浏览" Click="BrowsePyftsubset_Click"/>
 
         <StackPanel Grid.Row="6" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,8,0,8">

@@ -163,6 +163,82 @@ public partial class MainWindow : Window
         }
     }
 
+    private void PathTextBox_PreviewDragOver(object sender, System.Windows.DragEventArgs e)
+    {
+        e.Effects = e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop) ? System.Windows.DragDropEffects.Copy : System.Windows.DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    private void PathTextBox_PreviewDragEnter(object sender, System.Windows.DragEventArgs e)
+    {
+        if (sender is System.Windows.Controls.TextBox textBox)
+        {
+            textBox.BorderBrush = System.Windows.SystemColors.HighlightBrush;
+            textBox.BorderThickness = new Thickness(2);
+        }
+
+        PathTextBox_PreviewDragOver(sender, e);
+    }
+
+    private void PathTextBox_PreviewDragLeave(object sender, System.Windows.DragEventArgs e)
+    {
+        ResetDropHighlight(sender as System.Windows.Controls.TextBox);
+    }
+
+    private void WorkDirTextBox_Drop(object sender, System.Windows.DragEventArgs e)
+    {
+        ResetDropHighlight(sender as System.Windows.Controls.TextBox);
+
+        var directory = TryGetDroppedDirectory(e);
+        if (directory is null)
+        {
+            return;
+        }
+
+        WorkDirTextBox.Text = directory;
+    }
+
+    private void FontDirsTextBox_Drop(object sender, System.Windows.DragEventArgs e)
+    {
+        ResetDropHighlight(sender as System.Windows.Controls.TextBox);
+
+        var directory = TryGetDroppedDirectory(e);
+        if (directory is null)
+        {
+            return;
+        }
+
+        FontDirsTextBox.Text = string.IsNullOrWhiteSpace(FontDirsTextBox.Text)
+            ? directory
+            : $"{FontDirsTextBox.Text};{directory}";
+    }
+
+    private void MkvmergeTextBox_Drop(object sender, System.Windows.DragEventArgs e)
+    {
+        ResetDropHighlight(sender as System.Windows.Controls.TextBox);
+
+        var path = TryResolveDroppedExecutablePath(e, "mkvmerge.exe");
+        if (path is null)
+        {
+            return;
+        }
+
+        MkvmergeTextBox.Text = path;
+    }
+
+    private void PyftsubsetTextBox_Drop(object sender, System.Windows.DragEventArgs e)
+    {
+        ResetDropHighlight(sender as System.Windows.Controls.TextBox);
+
+        var path = TryResolveDroppedExecutablePath(e, "pyftsubset.exe", "pyftsubset.bat", "pyftsubset.cmd");
+        if (path is null)
+        {
+            return;
+        }
+
+        PyftsubsetTextBox.Text = path;
+    }
+
     private void ExportLogButton_Click(object sender, RoutedEventArgs e)
     {
         var dialog = new Microsoft.Win32.SaveFileDialog
@@ -375,6 +451,67 @@ public partial class MainWindow : Window
         }
 
         return value;
+    }
+
+    private static string? TryGetDroppedDirectory(System.Windows.DragEventArgs e)
+    {
+        if (e.Data.GetData(System.Windows.DataFormats.FileDrop) is not string[] droppedPaths || droppedPaths.Length == 0)
+        {
+            return null;
+        }
+
+        foreach (var path in droppedPaths)
+        {
+            if (Directory.Exists(path))
+            {
+                return path;
+            }
+        }
+
+        return null;
+    }
+
+    private static string? TryResolveDroppedExecutablePath(System.Windows.DragEventArgs e, params string[] expectedFileNames)
+    {
+        if (e.Data.GetData(System.Windows.DataFormats.FileDrop) is not string[] droppedPaths || droppedPaths.Length == 0)
+        {
+            return null;
+        }
+
+        foreach (var path in droppedPaths)
+        {
+            if (File.Exists(path) && expectedFileNames.Any(name => string.Equals(Path.GetFileName(path), name, StringComparison.OrdinalIgnoreCase)))
+            {
+                return path;
+            }
+
+            if (!Directory.Exists(path))
+            {
+                continue;
+            }
+
+            foreach (var fileName in expectedFileNames)
+            {
+                var candidate = Path.Combine(path, fileName);
+                if (File.Exists(candidate))
+                {
+                    return candidate;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static void ResetDropHighlight(System.Windows.Controls.TextBox? textBox)
+    {
+        if (textBox is null)
+        {
+            return;
+        }
+
+        textBox.ClearValue(System.Windows.Controls.Control.BorderBrushProperty);
+        textBox.ClearValue(System.Windows.Controls.Control.BorderThicknessProperty);
     }
 
     private void ApplyLocalization()
