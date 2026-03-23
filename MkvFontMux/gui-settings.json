@@ -1,0 +1,14 @@
+{
+  "HasCompletedOnboarding": true,
+  "MkvmergePath": null,
+  "PyftsubsetPath": null,
+  "FontDirectories": [
+    "H:\\Misc\\\u8D85\u7EA7\u5B57\u4F53\u6574\u5408\u5305 XZ\\\u7CBE\u7B80\u5305"
+  ],
+  "UseSmartFontMatching": true,
+  "EnableFontSubsetting": true,
+  "RemoveTemporaryFiles": true,
+  "SaveMuxLogBesideSource": false,
+  "OverwriteSourceFiles": false,
+  "SubtitleLanguage": "chi"
+}

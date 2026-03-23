@@ -1,0 +1,127 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:MkvFontMux.Gui.ViewModels"
+        x:Class="MkvFontMux.Gui.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        mc:Ignorable="d"
+        Width="738"
+        Height="450"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        CanResize="False"
+        SystemDecorations="BorderOnly"
+        TransparencyLevelHint="AcrylicBlur"
+        Title="MkvFontMux">
+  <Design.DataContext>
+    <vm:MainWindowViewModel />
+  </Design.DataContext>
+
+  <Grid RowDefinitions="Auto,*,Auto">
+    <Border Grid.RowSpan="3" Classes="PageBackground" />
+
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="4,4,4,0">
+      <Border x:Name="HeaderContent"
+              Grid.Column="0"
+              Background="Transparent"
+              Padding="4,4,4,4"
+              Opacity="0"
+              RenderTransform="translateY(-10px)"
+              PointerPressed="OnTitleBarPointerPressed">
+        <Border.Transitions>
+          <Transitions>
+            <DoubleTransition Property="Opacity" Duration="0:0:0.24" />
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.32" />
+          </Transitions>
+        </Border.Transitions>
+        <StackPanel Spacing="2">
+          <TextBlock Text="MkvFontMux" Classes="TopBrand" />
+          <TextBlock Text="Cross-platform font mux workflow" Classes="TopCaption" />
+        </StackPanel>
+      </Border>
+
+      <Button Grid.Column="1"
+              x:Name="CloseButton"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Classes="WindowButton"
+              Width="36"
+              Height="36"
+              Opacity="0"
+              RenderTransform="translateY(-10px)"
+              Click="OnCloseClick">
+        <Button.Transitions>
+          <Transitions>
+            <DoubleTransition Property="Opacity" Duration="0:0:0.24" />
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.32" />
+          </Transitions>
+        </Button.Transitions>
+        <Path Width="16"
+              Height="16"
+              Stroke="#FF5A4A42"
+              StrokeThickness="1.8"
+              Data="M3,3 L13,13 M13,3 L3,13" />
+      </Button>
+    </Grid>
+
+    <Grid Grid.Row="1" Margin="4,0,4,4">
+      <Canvas IsHitTestVisible="False">
+        <Ellipse Width="180" Height="180" Canvas.Left="-40" Canvas.Top="30" Fill="#66F2B880" />
+        <Ellipse Width="140" Height="140" Canvas.Right="0" Canvas.Top="-8" Fill="#55F6D6A6" />
+        <Ellipse Width="180" Height="180" Canvas.Left="430" Canvas.Top="190" Fill="#44D8E9FF" />
+      </Canvas>
+
+      <Grid>
+        <Border x:Name="HeroCardRoot"
+                Classes="HeroCard"
+                Margin="0"
+                MaxWidth="700"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Opacity="0"
+                RenderTransform="translateY(16px) scale(0.985)"
+                DragDrop.AllowDrop="True"
+                DragDrop.DragOver="OnDragOver"
+                DragDrop.DragLeave="OnDragLeave"
+                DragDrop.Drop="OnDrop">
+          <Border.Transitions>
+            <Transitions>
+              <DoubleTransition Property="Opacity" Duration="0:0:0.28" />
+              <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.38" />
+            </Transitions>
+          </Border.Transitions>
+          <Grid RowDefinitions="Auto,Auto" Margin="20">
+            <TextBlock Text="{Binding HeroTitle}" HorizontalAlignment="Center" TextAlignment="Center" Classes="HeroTitle" />
+            <TextBlock Grid.Row="1" Margin="0,8,0,0" Text="{Binding HeroSubtitle}" HorizontalAlignment="Center" TextAlignment="Center" Classes="HeroSubtitle" />
+          </Grid>
+        </Border>
+      </Grid>
+    </Grid>
+
+    <Grid Grid.Row="2" Margin="4,0,4,4" ColumnDefinitions="Auto,*">
+      <Button x:Name="SettingsButtonRoot"
+              Grid.Column="0"
+              Classes="SettingsButton"
+              Width="42"
+              Height="42"
+              Opacity="0"
+              RenderTransform="translateY(10px)"
+              Click="OnOpenSettingsClick">
+        <Button.Transitions>
+          <Transitions>
+            <DoubleTransition Property="Opacity" Duration="0:0:0.24" />
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.32" />
+          </Transitions>
+        </Button.Transitions>
+        <Path Width="20"
+              Height="20"
+              Fill="#FF5C4331"
+              Stretch="Uniform"
+              Data="M19.43,12.98 C19.47,12.66 19.5,12.34 19.5,12 C19.5,11.66 19.47,11.33 19.42,11.01 L21.54,9.37 C21.73,9.22 21.78,8.95 21.66,8.73 L19.66,5.27 C19.54,5.05 19.27,4.97 19.05,5.05 L16.56,6.05 C16.04,5.65 15.48,5.32 14.87,5.07 L14.5,2.42 C14.46,2.18 14.25,2 14,2 L10,2 C9.75,2 9.54,2.18 9.5,2.42 L9.13,5.07 C8.52,5.32 7.96,5.66 7.44,6.05 L4.95,5.05 C4.72,4.96 4.46,5.05 4.34,5.27 L2.34,8.73 C2.21,8.95 2.27,9.22 2.46,9.37 L4.58,11.01 C4.53,11.33 4.5,11.66 4.5,12 C4.5,12.34 4.53,12.67 4.58,12.99 L2.46,14.63 C2.27,14.78 2.22,15.05 2.34,15.27 L4.34,18.73 C4.46,18.95 4.73,19.03 4.95,18.95 L7.44,17.95 C7.96,18.35 8.52,18.68 9.13,18.93 L9.5,21.58 C9.54,21.82 9.75,22 10,22 L14,22 C14.25,22 14.46,21.82 14.5,21.58 L14.87,18.93 C15.48,18.68 16.04,18.34 16.56,17.95 L19.05,18.95 C19.28,19.04 19.54,18.95 19.66,18.73 L21.66,15.27 C21.78,15.05 21.73,14.78 21.54,14.63 L19.43,12.98 Z M12,15.5 C10.07,15.5 8.5,13.93 8.5,12 C8.5,10.07 10.07,8.5 12,8.5 C13.93,8.5 15.5,10.07 15.5,12 C15.5,13.93 13.93,15.5 12,15.5 Z" />
+      </Button>
+    </Grid>
+  </Grid>
+</Window>

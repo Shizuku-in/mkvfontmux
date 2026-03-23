@@ -1,0 +1,61 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MkvFontMux.Gui.Views.LogWindow"
+        Width="774"
+        Height="558"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        CanResize="False"
+        SystemDecorations="BorderOnly"
+        TransparencyLevelHint="AcrylicBlur"
+        Title="Processing log">
+  <Border x:Name="ShellRoot"
+          Classes="DialogShell"
+          Padding="26"
+          Opacity="0"
+          RenderTransform="translateY(14px) scale(0.99)">
+    <Border.Transitions>
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.24" />
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.34" />
+      </Transitions>
+    </Border.Transitions>
+    <Grid RowDefinitions="Auto,*,Auto">
+      <Grid ColumnDefinitions="*,Auto">
+        <Border Grid.Column="0"
+                Background="Transparent"
+                Padding="4"
+                PointerPressed="OnTitleBarPointerPressed">
+          <StackPanel Spacing="6">
+            <TextBlock Text="Processing log" Classes="DialogTitle" />
+            <TextBlock x:Name="SummaryText" Classes="BodyMuted" />
+          </StackPanel>
+        </Border>
+        <Button Width="42" Height="42" Classes="WindowButton" Click="OnCloseClick">
+          <Path Width="16"
+                Height="16"
+                Stroke="#FF5A4A42"
+                StrokeThickness="1.8"
+                Data="M3,3 L13,13 M13,3 L3,13" />
+        </Button>
+      </Grid>
+
+      <TextBox Grid.Row="1"
+               Margin="0,24,0,0"
+               Classes="LogBox"
+               IsReadOnly="True"
+               AcceptsReturn="True"
+               TextWrapping="Wrap"
+               VerticalContentAlignment="Top"
+               Text="{Binding LogText}" />
+
+      <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto" Margin="0,20,0,0">
+        <TextBlock x:Name="FolderText" VerticalAlignment="Center" Classes="BodyMuted" />
+        <Button Grid.Column="1" Margin="10,0,0,0" Classes="GhostButton" Click="OnCloseClick">Close</Button>
+        <Button Grid.Column="2" Margin="10,0,0,0" Classes="ActionButton" Click="OnSaveLogClick">Save log</Button>
+      </Grid>
+    </Grid>
+  </Border>
+</Window>

@@ -1,0 +1,228 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Styles.Resources>
+    <LinearGradientBrush x:Key="PageGradient" StartPoint="0,0" EndPoint="1,1">
+      <GradientStop Color="#FFF8F2E7" Offset="0" />
+      <GradientStop Color="#FFF6E1C7" Offset="0.45" />
+      <GradientStop Color="#FFE9D7C7" Offset="1" />
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#80FFFFFF" />
+    <SolidColorBrush x:Key="TextStrongBrush" Color="#FF36261C" />
+    <SolidColorBrush x:Key="TextMutedBrush" Color="#CC5A4A42" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#FFE38B52" />
+    <SolidColorBrush x:Key="AccentStrongBrush" Color="#FFC8642D" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#B3FFF8F0" />
+    <CornerRadius x:Key="CardCornerRadius">26</CornerRadius>
+  </Styles.Resources>
+
+  <Style Selector="Window">
+    <Setter Property="FontFamily" Value="Inter, Segoe UI, Noto Sans, sans-serif" />
+  </Style>
+
+  <Style Selector="Border.PageBackground">
+    <Setter Property="Background" Value="{StaticResource PageGradient}" />
+  </Style>
+
+  <Style Selector="Border.HeroCard">
+    <Setter Property="Background" Value="#A6FFF9F1" />
+    <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}" />
+    <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BoxShadow" Value="0 24 80 0 #3A8A5C2E" />
+    <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.22" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Border.HeroCard:pointerover">
+    <Setter Property="RenderTransform" Value="scale(1.01)" />
+  </Style>
+
+  <Style Selector="Border.HeroCard.drag-active">
+    <Setter Property="Background" Value="#CCFFFDF7" />
+    <Setter Property="BorderBrush" Value="#FFF0A46E" />
+    <Setter Property="BorderThickness" Value="1.5" />
+    <Setter Property="BoxShadow" Value="0 28 92 0 #4E9B6238" />
+    <Setter Property="RenderTransform" Value="scale(1.025)" />
+  </Style>
+
+  <Style Selector="Border.DialogShell, Border.SettingsCard, Border.InfoCard, Border.DropHintCard, Border.FootnoteCard, Border.MinimalHintCard">
+    <Setter Property="Background" Value="{StaticResource SurfaceBrush}" />
+    <Setter Property="CornerRadius" Value="24" />
+    <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+
+  <Style Selector="Border.DropHintCard">
+    <Setter Property="Background" Value="#CCFFFDF7" />
+  </Style>
+
+  <Style Selector="Border.TopBadge">
+    <Setter Property="Background" Value="#E37C4A" />
+  </Style>
+
+  <Style Selector="Button">
+    <Setter Property="CornerRadius" Value="18" />
+    <Setter Property="Padding" Value="18,12" />
+    <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Button:pointerover">
+    <Setter Property="RenderTransform" Value="scale(1.04)" />
+  </Style>
+
+  <Style Selector="Button.ActionButton">
+    <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+
+  <Style Selector="Button.ActionButton:pointerover">
+    <Setter Property="Background" Value="{StaticResource AccentStrongBrush}" />
+  </Style>
+
+  <Style Selector="Button.SecondaryButton">
+    <Setter Property="Background" Value="#FFF6E9D7" />
+    <Setter Property="Foreground" Value="{StaticResource TextStrongBrush}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+
+  <Style Selector="Button.GhostButton, Button.WindowButton">
+    <Setter Property="Background" Value="#B3FFFFFF" />
+    <Setter Property="Foreground" Value="{StaticResource TextStrongBrush}" />
+  </Style>
+
+  <Style Selector="Button.WindowButton">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="Button.SettingsButton">
+    <Setter Property="Background" Value="#FFF5E6D2" />
+  </Style>
+
+  <Style Selector="TextBlock.TopBrand">
+    <Setter Property="FontSize" Value="18" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{StaticResource TextStrongBrush}" />
+  </Style>
+
+  <Style Selector="TextBlock.TopCaption, TextBlock.BodyMuted">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+  </Style>
+
+  <Style Selector="TextBlock.HeroTitle">
+    <Setter Property="FontSize" Value="40" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{StaticResource TextStrongBrush}" />
+  </Style>
+
+  <Style Selector="TextBlock.HeroSubtitle">
+    <Setter Property="FontSize" Value="22" />
+    <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+  </Style>
+
+  <Style Selector="TextBlock.PanelTitle, TextBlock.DialogTitle">
+    <Setter Property="FontSize" Value="30" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{StaticResource TextStrongBrush}" />
+  </Style>
+
+  <Style Selector="TextBlock.SectionTitle">
+    <Setter Property="FontSize" Value="21" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{StaticResource TextStrongBrush}" />
+  </Style>
+
+  <Style Selector="TextBlock.InfoTitle, TextBlock.FieldLabel, TextBlock.BodyStrong">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{StaticResource TextStrongBrush}" />
+  </Style>
+
+  <Style Selector="TextBlock.InfoValue">
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+  </Style>
+
+  <Style Selector="TextBox, ComboBox, ListBox">
+    <Setter Property="Background" Value="#D9FFFDF7" />
+    <Setter Property="BorderBrush" Value="#66B9997C" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="18" />
+  </Style>
+
+  <Style Selector="TextBox.LogBox">
+    <Setter Property="MinHeight" Value="380" />
+    <Setter Property="FontFamily" Value="Cascadia Mono, Consolas, monospace" />
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+
+  <Style Selector="CheckBox">
+    <Setter Property="Foreground" Value="{StaticResource TextStrongBrush}" />
+  </Style>
+
+  <Style Selector="TextBlock.ValidationText">
+    <Setter Property="Foreground" Value="#FFC04839" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+
+  <Style Selector="Border.SettingsTransparentShell">
+    <Setter Property="Background" Value="#5CFFF8F0" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+
+  <Style Selector="Border.SettingsTransparentCard">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="#99FFFFFF" />
+  </Style>
+
+  <Style Selector="Border.SettingsFlatBorder">
+    <Setter Property="CornerRadius" Value="22" />
+  </Style>
+
+  <Style Selector="Button.SettingsFlatButton">
+    <Setter Property="CornerRadius" Value="16" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="#88A68A74" />
+  </Style>
+
+  <Style Selector="Button.SettingsCloseButton">
+    <Setter Property="CornerRadius" Value="21" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="#88A68A74" />
+    <Setter Property="Background" Value="#B3FFFFFF" />
+  </Style>
+
+  <Style Selector="TextBox.SettingsFlatInput, ComboBox.SettingsFlatInput, ListBox.SettingsFlatInput">
+    <Setter Property="CornerRadius" Value="16" />
+    <Setter Property="Background" Value="#F7FFFDF9" />
+    <Setter Property="BorderBrush" Value="#B8917762" />
+    <Setter Property="BorderThickness" Value="1.2" />
+    <Setter Property="Foreground" Value="#FF2F221A" />
+  </Style>
+
+  <Style Selector="TextBlock.BodyMuted">
+    <Setter Property="Foreground" Value="#FF4E4037" />
+  </Style>
+
+  <Style Selector="TextBlock.SectionTitle, TextBlock.FieldLabel">
+    <Setter Property="Foreground" Value="#FF241913" />
+  </Style>
+
+  <Style Selector="CheckBox">
+    <Setter Property="Foreground" Value="#FF2F221A" />
+  </Style>
+</Styles>

@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MkvFontMux.Gui.Views.ConfirmationWindow"
+        Width="648"
+        Height="504"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        CanResize="False"
+        SystemDecorations="BorderOnly"
+        TransparencyLevelHint="AcrylicBlur"
+        Title="Confirm">
+  <Border Classes="DialogShell" Padding="26">
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+      <TextBlock x:Name="TitleText" Classes="DialogTitle" />
+      <TextBlock Grid.Row="1" x:Name="BodyText" Margin="0,12,0,0" TextWrapping="Wrap" Classes="BodyMuted" />
+
+      <Border Grid.Row="2" Margin="0,20,0,0" Classes="SettingsCard">
+        <Grid RowDefinitions="Auto,*">
+          <TextBlock x:Name="FolderText" Classes="FieldLabel" />
+          <ListBox Grid.Row="1" Margin="0,12,0,0" x:Name="MissingFontsListBox" MinHeight="220" />
+        </Grid>
+      </Border>
+
+      <Grid Grid.Row="3" ColumnDefinitions="*,Auto,Auto" Margin="0,22,0,0">
+        <TextBlock x:Name="FootnoteText" VerticalAlignment="Center" Classes="BodyMuted" />
+        <Button Grid.Column="1" Margin="10,0,0,0" Classes="GhostButton" Click="OnBackClick">Back</Button>
+        <Button Grid.Column="2" Margin="10,0,0,0" Classes="ActionButton" Click="OnContinueClick">Continue</Button>
+      </Grid>
+    </Grid>
+  </Border>
+</Window>

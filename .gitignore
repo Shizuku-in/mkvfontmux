@@ -15,6 +15,12 @@
 # Local runtime/cache files
 **/font_index_cache.db
 **/config.ini
+.dotnet/
+.nuget/
+.appdata/
+.userprofile/
+*.tmp
+*.temp
 
 # OS files
 .DS_Store
