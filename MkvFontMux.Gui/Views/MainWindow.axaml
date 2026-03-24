@@ -21,7 +21,16 @@
     <vm:MainWindowViewModel />
   </Design.DataContext>
 
-  <Grid RowDefinitions="Auto,*,Auto">
+  <Grid x:Name="WindowRoot"
+        RowDefinitions="Auto,*,Auto"
+        Opacity="0"
+        RenderTransform="translateY(12px) scale(0.99)">
+    <Grid.Transitions>
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.24" />
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.34" />
+      </Transitions>
+    </Grid.Transitions>
     <Border Grid.RowSpan="3" Classes="PageBackground" />
 
     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="4,4,4,0">
@@ -40,7 +49,7 @@
         </Border.Transitions>
         <StackPanel Spacing="2">
           <TextBlock Text="MkvFontMux" Classes="TopBrand" />
-          <TextBlock Text="Cross-platform font mux workflow" Classes="TopCaption" />
+          <TextBlock Text="By gkouen" Classes="TopCaption" />
         </StackPanel>
       </Border>
 

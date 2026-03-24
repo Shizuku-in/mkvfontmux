@@ -5,6 +5,10 @@ namespace MkvFontMux.Gui.Views;
 
 public partial class ConfirmationWindow : Window
 {
+    private bool _allowImmediateClose;
+    private bool _isClosingAnimated;
+    private bool _pendingResult;
+
     public ConfirmationWindow()
         : this(string.Empty, Array.Empty<string>())
     {
@@ -13,6 +17,7 @@ public partial class ConfirmationWindow : Window
     public ConfirmationWindow(string folder, IReadOnlyList<string> missingFonts)
     {
         InitializeComponent();
+        Opened += OnOpened;
         FolderText.Text = $"Folder: {folder}";
 
         if (missingFonts.Count == 0)
@@ -30,14 +35,14 @@ public partial class ConfirmationWindow : Window
         FootnoteText.Text = $"{missingFonts.Count} missing font(s) found.";
     }
 
-    private void OnBackClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private async void OnBackClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        Close(false);
+        await CloseWithAnimationAsync(false);
     }
 
-    private void OnContinueClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private async void OnContinueClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        Close(true);
+        await CloseWithAnimationAsync(true);
     }
 
     private void OnTitleBarPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -46,5 +51,44 @@ public partial class ConfirmationWindow : Window
         {
             BeginMoveDrag(e);
         }
+    }
+
+    private void OnOpened(object? sender, EventArgs e)
+    {
+        ShellRoot.Opacity = 1;
+        ShellRoot.RenderTransform = null;
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        if (_allowImmediateClose)
+        {
+            base.OnClosing(e);
+            return;
+        }
+
+        e.Cancel = true;
+        if (!_isClosingAnimated)
+        {
+            _ = CloseWithAnimationAsync(false);
+        }
+
+        base.OnClosing(e);
+    }
+
+    private async Task CloseWithAnimationAsync(bool result)
+    {
+        if (_isClosingAnimated)
+        {
+            return;
+        }
+
+        _isClosingAnimated = true;
+        _pendingResult = result;
+        ShellRoot.Opacity = 0;
+        await Task.Delay(220);
+
+        _allowImmediateClose = true;
+        Close(_pendingResult);
     }
 }

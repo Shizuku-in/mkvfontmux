@@ -7,6 +7,9 @@ namespace MkvFontMux.Gui.Views;
 
 public partial class LogWindow : Window
 {
+    private bool _allowImmediateClose;
+    private bool _isClosingAnimated;
+
     public LogWindow()
     {
         InitializeComponent();
@@ -37,9 +40,26 @@ public partial class LogWindow : Window
         ShellRoot.RenderTransform = null;
     }
 
-    private void OnCloseClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private async void OnCloseClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        Close();
+        await CloseWithAnimationAsync();
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        if (_allowImmediateClose)
+        {
+            base.OnClosing(e);
+            return;
+        }
+
+        e.Cancel = true;
+        if (!_isClosingAnimated)
+        {
+            _ = CloseWithAnimationAsync();
+        }
+
+        base.OnClosing(e);
     }
 
     private async void OnSaveLogClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -65,5 +85,20 @@ public partial class LogWindow : Window
 
         await File.WriteAllTextAsync(path, viewModel.LogText);
         SummaryText.Text = $"Log saved to {path}";
+    }
+
+    private async Task CloseWithAnimationAsync()
+    {
+        if (_isClosingAnimated)
+        {
+            return;
+        }
+
+        _isClosingAnimated = true;
+        ShellRoot.Opacity = 0;
+        await Task.Delay(220);
+
+        _allowImmediateClose = true;
+        Close();
     }
 }

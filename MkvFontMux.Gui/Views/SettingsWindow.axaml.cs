@@ -10,6 +10,9 @@ public partial class SettingsWindow : Window
 {
     private readonly bool _forceInitialSetup;
     private readonly List<string> _fontDirectories;
+    private bool _allowImmediateClose;
+    private bool _isClosingAnimated;
+    private GuiSettings? _pendingResult;
     private bool _saved;
 
     public SettingsWindow()
@@ -62,6 +65,20 @@ public partial class SettingsWindow : Window
         {
             e.Cancel = true;
             ValidationText.Text = "Please save once on first run. Blank paths are allowed.";
+            base.OnClosing(e);
+            return;
+        }
+
+        if (_allowImmediateClose)
+        {
+            base.OnClosing(e);
+            return;
+        }
+
+        e.Cancel = true;
+        if (!_isClosingAnimated)
+        {
+            _ = CloseWithAnimationAsync(_pendingResult);
         }
 
         base.OnClosing(e);
@@ -133,7 +150,7 @@ public partial class SettingsWindow : Window
         RefreshFontList();
     }
 
-    private void OnCancelClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private async void OnCancelClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         if (_forceInitialSetup)
         {
@@ -141,10 +158,10 @@ public partial class SettingsWindow : Window
             return;
         }
 
-        Close(null);
+        await CloseWithAnimationAsync(null);
     }
 
-    private void OnSaveClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private async void OnSaveClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         ValidationText.Text = string.Empty;
 
@@ -164,7 +181,7 @@ public partial class SettingsWindow : Window
         }
 
         _saved = true;
-        Close(new GuiSettings
+        await CloseWithAnimationAsync(new GuiSettings
         {
             HasCompletedOnboarding = true,
             MkvmergePath = mkvmerge,
@@ -209,4 +226,20 @@ public partial class SettingsWindow : Window
     }
 
     private static string? NormalizePath(string? path) => string.IsNullOrWhiteSpace(path) ? null : path.Trim();
+
+    private async Task CloseWithAnimationAsync(GuiSettings? result)
+    {
+        if (_isClosingAnimated)
+        {
+            return;
+        }
+
+        _isClosingAnimated = true;
+        _pendingResult = result;
+        ShellRoot.Opacity = 0;
+        await Task.Delay(220);
+
+        _allowImmediateClose = true;
+        Close(_pendingResult);
+    }
 }

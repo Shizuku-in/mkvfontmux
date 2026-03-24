@@ -19,7 +19,18 @@
       <Ellipse Width="260" Height="260" Canvas.Left="430" Canvas.Top="270" Fill="#44D8E9FF" />
     </Canvas>
 
-    <Border Classes="DialogShell SettingsTransparentShell SettingsFlatBorder" Padding="26" Margin="18">
+    <Border x:Name="ShellRoot"
+            Classes="DialogShell SettingsTransparentShell SettingsFlatBorder"
+            Padding="26"
+            Margin="18"
+            Opacity="0"
+            RenderTransform="translateY(14px) scale(0.99)">
+      <Border.Transitions>
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.24" />
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.34" />
+        </Transitions>
+      </Border.Transitions>
       <Grid RowDefinitions="Auto,*,Auto">
         <Border Grid.Row="0"
                 Background="Transparent"

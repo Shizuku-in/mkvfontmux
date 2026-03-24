@@ -10,6 +10,9 @@ namespace MkvFontMux.Gui.Views;
 
 public partial class MainWindow : Window
 {
+    private bool _allowImmediateClose;
+    private bool _isClosingAnimated;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -21,6 +24,8 @@ public partial class MainWindow : Window
     private async void OnOpened(object? sender, EventArgs e)
     {
         LockWindowWidth();
+        WindowRoot.Opacity = 1;
+        WindowRoot.RenderTransform = null;
         PlayEntranceAnimations();
         ViewModel.ResetHero();
         if (!ViewModel.HasCompletedOnboarding)
@@ -45,9 +50,26 @@ public partial class MainWindow : Window
         }
     }
 
-    private void OnCloseClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private async void OnCloseClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        Close();
+        await CloseWithAnimationAsync();
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        if (_allowImmediateClose)
+        {
+            base.OnClosing(e);
+            return;
+        }
+
+        e.Cancel = true;
+        if (!_isClosingAnimated)
+        {
+            _ = CloseWithAnimationAsync();
+        }
+
+        base.OnClosing(e);
     }
 
     private void OnTitleBarPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -116,7 +138,14 @@ public partial class MainWindow : Window
 
         try
         {
+            // Scanning phase
+            using var scanCts = new CancellationTokenSource();
+            var scanAnimationTask = AnimateLoadingAsync("Scanning subtitles and fonts", scanCts.Token);
             var scanResult = await RunMuxAsync(folder, settings, onlyPrintMatchFont: true);
+            scanCts.Cancel();
+            try { await scanAnimationTask; } catch { }
+            ViewModel.HeroSubtitle = Path.GetFileName(folder);
+
             foreach (var line in scanResult.Messages)
             {
                 ViewModel.AppendLog(line);
@@ -140,14 +169,21 @@ public partial class MainWindow : Window
             if (!shouldContinue)
             {
                 ViewModel.IsBusy = false;
-                ViewModel.HeroTitle = "Cancelled";
+                ViewModel.HeroTitle = "ヽ(*。>Д<)o゜";
                 ViewModel.HeroSubtitle = Path.GetFileName(folder);
                 ViewModel.StatusText = "Nothing was changed.";
                 return;
             }
 
+            // Muxing phase
+            using var muxCts = new CancellationTokenSource();
+            var muxAnimationTask = AnimateLoadingAsync("Muxing files", muxCts.Token);
             ViewModel.StatusText = "Muxing files...";
             var processResult = await RunMuxAsync(folder, settings, onlyPrintMatchFont: false);
+            muxCts.Cancel();
+            try { await muxAnimationTask; } catch { }
+            ViewModel.HeroSubtitle = Path.GetFileName(folder);
+
             foreach (var line in processResult.Messages)
             {
                 ViewModel.AppendLog(line);
@@ -172,7 +208,7 @@ public partial class MainWindow : Window
     private async Task<MuxRunResult> RunMuxAsync(string folder, GuiSettings settings, bool onlyPrintMatchFont)
     {
         var service = new MuxService();
-        return await service.RunAsync(new MuxRequest
+        var request = new MuxRequest
         {
             WorkDirectory = folder,
             UseConfigIniDefaults = false,
@@ -187,7 +223,27 @@ public partial class MainWindow : Window
             SubtitleLanguage = settings.SubtitleLanguage,
             OnlyPrintMatchFont = onlyPrintMatchFont,
             Log = _ => { }
-        });
+        };
+
+        return await Task.Run(() => service.RunAsync(request));
+    }
+
+    private async Task AnimateLoadingAsync(string baseText, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var dotCount = 0;
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                dotCount = (dotCount % 3) + 1;
+                ViewModel.HeroSubtitle = baseText + new string('.', dotCount);
+                await Task.Delay(500, cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected when animation is stopped
+        }
     }
 
     private async Task ShowLogWindowAsync()
@@ -228,5 +284,20 @@ public partial class MainWindow : Window
 
         MinWidth = width;
         MaxWidth = width;
+    }
+
+    private async Task CloseWithAnimationAsync()
+    {
+        if (_isClosingAnimated)
+        {
+            return;
+        }
+
+        _isClosingAnimated = true;
+        WindowRoot.Opacity = 0;
+        await Task.Delay(220);
+
+        _allowImmediateClose = true;
+        Close();
     }
 }

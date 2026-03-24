@@ -93,7 +93,7 @@ public sealed class MainWindowViewModel : ViewModelBase
 
     public void ResetHero()
     {
-        HeroTitle = "MkvFontMux";
+        HeroTitle = "(∠・ω< )⌒☆";
         HeroSubtitle = IsBusy ? "Working on your folder..." : "Drag folder here!";
     }
 
@@ -101,8 +101,8 @@ public sealed class MainWindowViewModel : ViewModelBase
     {
         IsBusy = true;
         LastFolder = folder;
-        HeroTitle = "Preparing your mux";
-        HeroSubtitle = Path.GetFileName(folder);
+        HeroTitle = "o((>ω< ))o";
+        HeroSubtitle = "Scanning subtitles and fonts...";
         StatusText = "Scanning subtitles and fonts...";
         LogText = string.Empty;
     }
@@ -110,7 +110,7 @@ public sealed class MainWindowViewModel : ViewModelBase
     public void CompleteRun(bool success)
     {
         IsBusy = false;
-        HeroTitle = success ? "Finished" : "Finished with issues";
+        HeroTitle = success ? "ヾ(≧▽≦*)o" : "ヽ(*。>Д<)o゜";
         HeroSubtitle = LastFolder is null ? "Drag folder here!" : Path.GetFileName(LastFolder);
         StatusText = success ? "You can review or save the log below." : "Review the log before trying again.";
     }
