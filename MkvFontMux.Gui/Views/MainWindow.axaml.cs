@@ -20,6 +20,7 @@ public partial class MainWindow : Window
 
     private async void OnOpened(object? sender, EventArgs e)
     {
+        LockWindowWidth();
         PlayEntranceAnimations();
         ViewModel.ResetHero();
         if (!ViewModel.HasCompletedOnboarding)
@@ -215,5 +216,17 @@ public partial class MainWindow : Window
 
         SettingsButtonRoot.Opacity = 1;
         SettingsButtonRoot.RenderTransform = null;
+    }
+
+    private void LockWindowWidth()
+    {
+        var width = Bounds.Width;
+        if (width <= 0)
+        {
+            return;
+        }
+
+        MinWidth = width;
+        MaxWidth = width;
     }
 }

@@ -19,6 +19,7 @@
 .nuget/
 .appdata/
 .userprofile/
+.avalonia-build-tasks/
 *.tmp
 *.temp
 

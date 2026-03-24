@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 
 namespace MkvFontMux.Gui.Views;
 
@@ -37,5 +38,13 @@ public partial class ConfirmationWindow : Window
     private void OnContinueClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         Close(true);
+    }
+
+    private void OnTitleBarPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            BeginMoveDrag(e);
+        }
     }
 }

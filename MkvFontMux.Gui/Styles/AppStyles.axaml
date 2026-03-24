@@ -1,6 +1,22 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Styles.Resources>
+    <Color x:Key="SystemAccentColor">#FFC57B4A</Color>
+    <Color x:Key="SystemAccentColorDark1">#FFB86C3B</Color>
+    <Color x:Key="SystemAccentColorDark2">#FFA9602F</Color>
+    <Color x:Key="SystemAccentColorDark3">#FF8E4E24</Color>
+    <Color x:Key="SystemAccentColorLight1">#FFD08D61</Color>
+    <Color x:Key="SystemAccentColorLight2">#FFD9A47F</Color>
+    <Color x:Key="SystemAccentColorLight3">#FFE4B99A</Color>
+
+    <SolidColorBrush x:Key="SystemAccentColorBrush" Color="{DynamicResource SystemAccentColor}" />
+    <SolidColorBrush x:Key="SystemAccentColorDark1Brush" Color="{DynamicResource SystemAccentColorDark1}" />
+    <SolidColorBrush x:Key="SystemAccentColorDark2Brush" Color="{DynamicResource SystemAccentColorDark2}" />
+    <SolidColorBrush x:Key="SystemAccentColorDark3Brush" Color="{DynamicResource SystemAccentColorDark3}" />
+    <SolidColorBrush x:Key="SystemAccentColorLight1Brush" Color="{DynamicResource SystemAccentColorLight1}" />
+    <SolidColorBrush x:Key="SystemAccentColorLight2Brush" Color="{DynamicResource SystemAccentColorLight2}" />
+    <SolidColorBrush x:Key="SystemAccentColorLight3Brush" Color="{DynamicResource SystemAccentColorLight3}" />
+
     <LinearGradientBrush x:Key="PageGradient" StartPoint="0,0" EndPoint="1,1">
       <GradientStop Color="#FFF8F2E7" Offset="0" />
       <GradientStop Color="#FFF6E1C7" Offset="0.45" />
@@ -103,12 +119,20 @@
 
   <Style Selector="Button.WindowButton">
     <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderBrush" Value="#88A68A74" />
+    <Setter Property="BorderThickness" Value="1" />
     <Setter Property="HorizontalContentAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
 
   <Style Selector="Button.SettingsButton">
-    <Setter Property="Background" Value="#FFF5E6D2" />
+    <Setter Property="Background" Value="#B3FFFFFF" />
+    <Setter Property="BorderBrush" Value="#88A68A74" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="999" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
 
   <Style Selector="TextBlock.TopBrand">
@@ -211,6 +235,12 @@
     <Setter Property="Background" Value="#F7FFFDF9" />
     <Setter Property="BorderBrush" Value="#B8917762" />
     <Setter Property="BorderThickness" Value="1.2" />
+    <Setter Property="Foreground" Value="#FF2F221A" />
+  </Style>
+
+  <Style Selector="ListBox.SettingsFlatInput ListBoxItem:selected">
+    <Setter Property="Background" Value="#59E5B690" />
+    <Setter Property="BorderBrush" Value="#CCB8825D" />
     <Setter Property="Foreground" Value="#FF2F221A" />
   </Style>
 
