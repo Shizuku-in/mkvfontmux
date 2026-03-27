@@ -1,6 +1,6 @@
 # MkvFontMux
 
-MkvFontMux is a subtitle-font automation tool for MKV workflows.
+MkvFontMux is a cross-platform subtitle-font automation tool for MKV workflows.
 It parses ASS subtitles, matches fonts, subsets fonts, rewrites subtitle font names, and muxes output with `mkvmerge`.
 
 ## Requirements
