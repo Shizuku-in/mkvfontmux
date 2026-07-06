@@ -44,7 +44,7 @@ public partial class SettingsWindow : Window
         OverwriteSourceCheckBox.IsChecked = currentSettings.OverwriteSourceFiles;
         SubtitleLanguageComboBox.SelectedIndex = currentSettings.SubtitleLanguage switch
         {
-            "zh-Hant" => 1,
+            "cht" => 1,
             "eng" => 2,
             "jpn" => 3,
             _ => 0
@@ -192,7 +192,7 @@ public partial class SettingsWindow : Window
             RemoveTemporaryFiles = RemoveTempCheckBox.IsChecked != false,
             SaveMuxLogBesideSource = SaveSidecarLogCheckBox.IsChecked == true,
             OverwriteSourceFiles = OverwriteSourceCheckBox.IsChecked == true,
-            SubtitleLanguage = ((ComboBoxItem?)SubtitleLanguageComboBox.SelectedItem)?.Tag?.ToString() ?? "zh-Hans"
+            SubtitleLanguage = ((ComboBoxItem?)SubtitleLanguageComboBox.SelectedItem)?.Tag?.ToString() ?? "chi"
         });
     }
 

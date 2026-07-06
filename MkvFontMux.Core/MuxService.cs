@@ -289,12 +289,12 @@ public sealed class MuxService
 
         if (ContainsKeyword(name, tokens, TraditionalChineseKeywords))
         {
-            return "zh-Hant";
+            return "cht";
         }
 
         if (ContainsKeyword(name, tokens, SimplifiedChineseKeywords))
         {
-            return "zh-Hans";
+            return "chi";
         }
 
         if (ContainsKeyword(name, tokens, EnglishKeywords))
@@ -307,7 +307,7 @@ public sealed class MuxService
             return "jpn";
         }
 
-        return string.IsNullOrWhiteSpace(fallbackCode) ? "zh-Hans" : fallbackCode;
+        return string.IsNullOrWhiteSpace(fallbackCode) ? "chi" : fallbackCode;
     }
 
     private static bool ContainsKeyword(string normalizedName, HashSet<string> tokens, IEnumerable<string> keywords)

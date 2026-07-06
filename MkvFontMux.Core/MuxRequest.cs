@@ -12,7 +12,7 @@ public sealed class MuxRequest
     public bool Overwrite { get; init; }
     public bool SaveTemp { get; init; }
     public bool OnlyPrintMatchFont { get; init; }
-    public string SubtitleLanguage { get; init; } = "zh-Hans";
+    public string SubtitleLanguage { get; init; } = "chi";
     public string? PyftsubsetPath { get; init; }
     public Action<string>? Log { get; init; }
 }

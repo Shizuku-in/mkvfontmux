@@ -11,5 +11,5 @@ public sealed class GuiSettings
     public bool RemoveTemporaryFiles { get; set; } = true;
     public bool SaveMuxLogBesideSource { get; set; }
     public bool OverwriteSourceFiles { get; set; }
-    public string SubtitleLanguage { get; set; } = "zh-Hans";
+    public string SubtitleLanguage { get; set; } = "chi";
 }

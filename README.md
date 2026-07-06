@@ -21,7 +21,7 @@ It parses ASS subtitles, matches fonts, subsets fonts, rewrites subtitle font na
 - `--overwrite`, `-o`
 - `--save-temp`, `-r`
 - `--only-print-matchfont`, `-p`
-- `--subtitle-language <code>`, `-s` (default/fallback: `zh-Hans`; ASS filename keyword auto-detect supports Simplified Chinese → `zh-Hans`: `sc/chs/zhs/zh-cn/gb/gbk/...`, Traditional Chinese → `zh-Hant`: `tc/cht/zht/zh-tw/big5/...`, English → `eng`: `en/eng/...`, Japanese → `jpn`: `jpn/ja/jp/...`)
+- `--subtitle-language <code>`, `-s` (default/fallback: `chi`; ASS filename keyword auto-detect supports Simplified Chinese → `chi`: `sc/chs/zhs/zh-cn/gb/gbk/...`, Traditional Chinese → `cht`: `tc/cht/zht/zh-tw/big5/...`, English → `eng`: `en/eng/...`, Japanese → `jpn`: `jpn/ja/jp/...`)
 - `--pyftsubset-bin <path>`, `-y`
 
 ## Default Config
