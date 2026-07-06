@@ -57,21 +57,21 @@ dotnet run --project MkvFontMux.Gui
 - `pyftsubset-bin`: CLI 参数 > `config.ini` > PATH
 - `font-directory`: CLI 参数 > `config.ini` > 下表
 
-| Platform | Directory |
-|---|---|
-|Windows| `%WINDIR%\Fonts`, `%LOCALAPPDATA%\Microsoft\Windows\Fonts`|
-|macOS|`/Library/Fonts`, `/System/Library/Fonts`, `~/Library/Fonts`|
-|Linux|`/usr/share/fonts`, `~/.local/share/fonts`|
+| Platform | Directory                                                    |
+| -------- | ------------------------------------------------------------ |
+| Windows  | `%WINDIR%\Fonts`, `%LOCALAPPDATA%\Microsoft\Windows\Fonts`   |
+| macOS    | `/Library/Fonts`, `/System/Library/Fonts`, `~/Library/Fonts` |
+| Linux    | `/usr/share/fonts`, `~/.local/share/fonts`                   |
 
 ### 语言代码映射
 
-|Order| Keyword | Code |
-|---|---|---|
-|1| `sc`, `chs`, `zhs`, `zh-cn`, `gb`, `gbk`, `gb2312`, `简体`, `简中` | `chi`  |
-|2|  `tc`, `cht`, `zht`, `zh-tw`, `big5`, `繁体`, `繁中` | `cht` |
-|3|`en`, `eng`, `english`, `英文`, `英字`| `eng`|
-|4|`jp`, `ja`, `jpn`, `japanese`, `日文`, `日语`, `日字`|`jpn`|
-|5| 未命中 | `--subtitle-language` 的值 (默认 `chi`)|
+| Order | Keyword                                                            | Code                                    |
+| ----- | ------------------------------------------------------------------ | --------------------------------------- |
+| 1     | `sc`, `chs`, `zhs`, `zh-cn`, `gb`, `gbk`, `gb2312`, `简体`, `简中` | `chi`                                   |
+| 2     | `tc`, `cht`, `zht`, `zh-tw`, `big5`, `繁体`, `繁中`                | `cht`                                   |
+| 3     | `en`, `eng`, `english`, `英文`, `英字`                             | `eng`                                   |
+| 4     | `jp`, `ja`, `jpn`, `japanese`, `日文`, `日语`, `日字`              | `jpn`                                   |
+| 5     | 未命中                                                             | `--subtitle-language` 的值 (默认 `chi`) |
 
 # 许可证
 

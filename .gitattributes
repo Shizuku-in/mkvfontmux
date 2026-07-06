@@ -1,0 +1,40 @@
+# Auto-detect text files, normalize to LF on commit
+* text=auto
+
+# Source code
+*.cs              text eol=lf
+*.csproj          text eol=lf
+*.sln             text eol=lf
+*.axaml           text eol=lf
+*.xml             text eol=lf
+*.props           text eol=lf
+*.targets         text eol=lf
+
+# Config & data
+*.json            text eol=lf
+*.ini             text eol=lf
+*.config          text eol=lf
+
+# Documentation
+*.md              text eol=lf
+
+# Scripts
+*.sh              text eol=lf
+*.ps1             text eol=lf
+
+# Windows-only scripts
+*.bat             text eol=crlf
+*.cmd             text eol=crlf
+
+# Binary
+*.dll             -text
+*.exe             -text
+*.pdb             -text
+*.ttf             -text
+*.otf             -text
+*.ttc             -text
+*.png             -text
+*.jpg             -text
+*.jpeg            -text
+*.ico             -text
+*.db              -text
