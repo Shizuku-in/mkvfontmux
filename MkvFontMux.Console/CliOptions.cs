@@ -111,7 +111,7 @@ public sealed class CliOptions(
             flags.Contains("overwrite"),
             flags.Contains("save-temp"),
             flags.Contains("only-print-matchfont"),
-            values.GetValueOrDefault("subtitle-language") ?? "chi",
+            values.GetValueOrDefault("subtitle-language") ?? "zh-Hans",
             values.GetValueOrDefault("pyftsubset-bin") ?? defaults.PyftsubsetBin);
     }
 
@@ -166,7 +166,7 @@ public sealed class CliOptions(
         PrintOption("--overwrite, -o", "Overwrite source MKV");
         PrintOption("--save-temp, -r", "Save temporary files");
         PrintOption("--only-print-matchfont, -p", "Report font matching only");
-        PrintOption("--subtitle-language <code>, -s", "Language code for ASS tracks (default: chi)");
+        PrintOption("--subtitle-language <code>, -s", "Language code for ASS tracks (default: zh-Hans)");
         PrintOption("--pyftsubset-bin <path>, -y", "Pyftsubset executable path");
         Console.WriteLine();
         Console.WriteLine("  Defaults are read from config.ini in the executable directory.");

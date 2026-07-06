@@ -110,8 +110,8 @@
             <StackPanel Spacing="8" Margin="0,10,0,0">
               <TextBlock Classes="FieldLabel" Text="Fallback subtitle language" />
               <ComboBox x:Name="SubtitleLanguageComboBox" Classes="SettingsFlatInput" SelectedIndex="0">
-                <ComboBoxItem Content="chi - Simplified Chinese" Tag="chi" />
-                <ComboBoxItem Content="cht - Traditional Chinese" Tag="cht" />
+                <ComboBoxItem Content="zh-Hans - Simplified Chinese" Tag="zh-Hans" />
+                <ComboBoxItem Content="zh-Hant - Traditional Chinese" Tag="zh-Hant" />
                 <ComboBoxItem Content="eng - English" Tag="eng" />
                 <ComboBoxItem Content="jpn - Japanese" Tag="jpn" />
               </ComboBox>

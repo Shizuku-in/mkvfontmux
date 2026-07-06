@@ -1,5 +1,7 @@
 # MkvFontMux
 
+[中文](README-zh.md)
+
 MkvFontMux is a cross-platform subtitle-font automation tool for MKV workflows.
 It parses ASS subtitles, matches fonts, subsets fonts, rewrites subtitle font names, and muxes output with `mkvmerge`.
 
@@ -19,7 +21,7 @@ It parses ASS subtitles, matches fonts, subsets fonts, rewrites subtitle font na
 - `--overwrite`, `-o`
 - `--save-temp`, `-r`
 - `--only-print-matchfont`, `-p`
-- `--subtitle-language <code>`, `-s` (default/fallback: `chi`; ASS filename keyword auto-detect supports Simplified Chinese: `sc/chs/zhs/zh-cn/gb/gbk/...`, Traditional Chinese: `tc/cht/zht/zh-tw/big5/...`, English: `en/eng/...`, Japanese: `jpn/ja/jp/...`)
+- `--subtitle-language <code>`, `-s` (default/fallback: `zh-Hans`; ASS filename keyword auto-detect supports Simplified Chinese → `zh-Hans`: `sc/chs/zhs/zh-cn/gb/gbk/...`, Traditional Chinese → `zh-Hant`: `tc/cht/zht/zh-tw/big5/...`, English → `eng`: `en/eng/...`, Japanese → `jpn`: `jpn/ja/jp/...`)
 - `--pyftsubset-bin <path>`, `-y`
 
 ## Default Config
