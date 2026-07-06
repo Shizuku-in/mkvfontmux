@@ -8,7 +8,7 @@ public sealed class CliOptions(
     bool disableSubset,
     bool saveLog,
     bool overwrite,
-    bool removeTemp,
+    bool saveTemp,
     bool onlyPrintMatchFont,
     string subtitleLanguage,
     string? pyftsubsetPath)
@@ -20,7 +20,7 @@ public sealed class CliOptions(
     public bool DisableSubset { get; } = disableSubset;
     public bool SaveLog { get; } = saveLog;
     public bool Overwrite { get; } = overwrite;
-    public bool RemoveTemp { get; } = removeTemp;
+    public bool SaveTemp { get; } = saveTemp;
     public bool OnlyPrintMatchFont { get; } = onlyPrintMatchFont;
     public string SubtitleLanguage { get; } = subtitleLanguage;
     public string? PyftsubsetPath { get; } = pyftsubsetPath;
@@ -33,7 +33,7 @@ public sealed class CliOptions(
         ["n"] = "disable-subset",
         ["l"] = "save-log",
         ["o"] = "overwrite",
-        ["r"] = "remove-temp",
+        ["r"] = "save-temp",
         ["p"] = "only-print-matchfont",
         ["s"] = "subtitle-language",
         ["y"] = "pyftsubset-bin"
@@ -109,7 +109,7 @@ public sealed class CliOptions(
             flags.Contains("disable-subset"),
             flags.Contains("save-log"),
             flags.Contains("overwrite"),
-            flags.Contains("remove-temp"),
+            flags.Contains("save-temp"),
             flags.Contains("only-print-matchfont"),
             values.GetValueOrDefault("subtitle-language") ?? "chi",
             values.GetValueOrDefault("pyftsubset-bin") ?? defaults.PyftsubsetBin);
@@ -158,16 +158,23 @@ public sealed class CliOptions(
     public static void PrintHelp()
     {
         Console.WriteLine("Usage: MkvFontMux <dir> [options]");
-        Console.WriteLine("  --mkvmerge-bin <path>, -m   Path to mkvmerge executable");
-        Console.WriteLine("  --force-match, -f           Force exact font name matching");
-        Console.WriteLine("  --font-directory <d1;d2>, -d Custom font scan directories");
-        Console.WriteLine("  --disable-subset, -n        Disable font subsetting");
-        Console.WriteLine("  --save-log, -l              Save logs to mux.log");
-        Console.WriteLine("  --overwrite, -o             Overwrite source MKV");
-        Console.WriteLine("  --remove-temp, -r           Remove temporary files");
-        Console.WriteLine("  --only-print-matchfont, -p  Report font matching only");
-        Console.WriteLine("  --subtitle-language <code>, -s Language code for ASS tracks (default: chi)");
-        Console.WriteLine("  --pyftsubset-bin <path>, -y Optional pyftsubset executable path");
-        Console.WriteLine("  defaults from exe-dir config.ini: mkvmerge-bin/font-directory/pyftsubset-bin");
+        PrintOption("--mkvmerge-bin <path>, -m", "Mkvmerge executable path");
+        PrintOption("--force-match, -f", "Force exact font name matching");
+        PrintOption("--font-directory <d1;d2>, -d", "Custom font scan directories");
+        PrintOption("--disable-subset, -n", "Disable font subsetting");
+        PrintOption("--save-log, -l", "Save logs to mux.log");
+        PrintOption("--overwrite, -o", "Overwrite source MKV");
+        PrintOption("--save-temp, -r", "Save temporary files");
+        PrintOption("--only-print-matchfont, -p", "Report font matching only");
+        PrintOption("--subtitle-language <code>, -s", "Language code for ASS tracks (default: chi)");
+        PrintOption("--pyftsubset-bin <path>, -y", "Pyftsubset executable path");
+        Console.WriteLine();
+        Console.WriteLine("  Defaults are read from config.ini in the executable directory.");
+        Console.WriteLine("  Supported keys: mkvmerge-bin, font-directory, pyftsubset-bin");
+    }
+
+    private static void PrintOption(string option, string description)
+    {
+        Console.WriteLine($"  {option.PadRight(34)}{description}");
     }
 }

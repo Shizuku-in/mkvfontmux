@@ -217,7 +217,7 @@ public partial class MainWindow : Window
             FontDirectories = settings.FontDirectories.Count == 0 ? null : settings.FontDirectories,
             ForceMatch = !settings.UseSmartFontMatching,
             DisableSubset = !settings.EnableFontSubsetting,
-            RemoveTemp = settings.RemoveTemporaryFiles,
+            SaveTemp = !settings.RemoveTemporaryFiles,
             SaveLog = !onlyPrintMatchFont && settings.SaveMuxLogBesideSource,
             Overwrite = settings.OverwriteSourceFiles,
             SubtitleLanguage = settings.SubtitleLanguage,

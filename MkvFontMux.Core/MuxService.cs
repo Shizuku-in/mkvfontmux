@@ -86,7 +86,7 @@ public sealed class MuxService
         }
         finally
         {
-            if (request.RemoveTemp && tempDir.Exists)
+            if (!request.SaveTemp && tempDir.Exists)
             {
                 tempDir.Delete(recursive: true);
                 Log("Temporary files removed.");

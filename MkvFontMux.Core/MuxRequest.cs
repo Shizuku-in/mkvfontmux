@@ -10,7 +10,7 @@ public sealed class MuxRequest
     public bool DisableSubset { get; init; }
     public bool SaveLog { get; init; }
     public bool Overwrite { get; init; }
-    public bool RemoveTemp { get; init; } = true;
+    public bool SaveTemp { get; init; }
     public bool OnlyPrintMatchFont { get; init; }
     public string SubtitleLanguage { get; init; } = "chi";
     public string? PyftsubsetPath { get; init; }

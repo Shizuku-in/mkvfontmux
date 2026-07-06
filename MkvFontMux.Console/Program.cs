@@ -32,7 +32,7 @@ internal sealed class Program
             DisableSubset = options.DisableSubset,
             SaveLog = options.SaveLog,
             Overwrite = options.Overwrite,
-            RemoveTemp = options.RemoveTemp,
+            SaveTemp = options.SaveTemp,
             OnlyPrintMatchFont = options.OnlyPrintMatchFont,
             SubtitleLanguage = options.SubtitleLanguage,
             PyftsubsetPath = options.PyftsubsetPath,
