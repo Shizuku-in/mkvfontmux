@@ -19,7 +19,8 @@ internal static class AssRewriter
 
         foreach (var ass in assFiles)
         {
-            var lines = File.ReadAllLines(ass.FullName, Encoding.UTF8).ToList();
+            var encoding = EncodingDetector.Detect(ass.FullName);
+            var lines = File.ReadAllLines(ass.FullName, encoding).ToList();
             var output = new List<string>(lines.Count + fontMap.Count + 8);
             var inScriptInfo = false;
             var insertedMap = false;

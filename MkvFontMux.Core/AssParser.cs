@@ -10,7 +10,8 @@ internal static class AssParser
     public static IReadOnlyDictionary<string, HashSet<char>> Parse(string filepath)
     {
         var textByFont = new Dictionary<string, HashSet<char>>(StringComparer.OrdinalIgnoreCase);
-        var lines = File.ReadAllLines(filepath, Encoding.UTF8);
+        var encoding = EncodingDetector.Detect(filepath);
+        var lines = File.ReadAllLines(filepath, encoding);
         var styles = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         string? section = null;
