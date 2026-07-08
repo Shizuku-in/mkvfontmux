@@ -5,6 +5,7 @@ namespace MkvFontMux;
 
 internal static class AssRewriter
 {
+    private static readonly Regex FnTagRegex = new(@"\\fn([^\\}]+)", RegexOptions.Compiled);
     public static IEnumerable<string> RewriteAssFiles(IEnumerable<FileInfo> assFiles, IReadOnlyDictionary<string, string> fontMap, string tempDir)
     {
         if (fontMap.Count == 0)
@@ -67,9 +68,8 @@ internal static class AssRewriter
 
                 if (line.Contains("\\fn", StringComparison.Ordinal))
                 {
-                    line = Regex.Replace(
+                    line = FnTagRegex.Replace(
                         line,
-                        "\\\\fn([^\\\\}]+)",
                         match =>
                         {
                             var fontName = match.Groups[1].Value;

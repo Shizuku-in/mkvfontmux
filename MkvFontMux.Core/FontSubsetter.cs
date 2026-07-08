@@ -59,12 +59,14 @@ internal static class FontSubsetter
             }
 
             var stderrTask = process.StandardError.ReadToEndAsync();
+            var stdoutTask = process.StandardOutput.ReadToEndAsync();
             await process.WaitForExitAsync();
             var stderr = await stderrTask;
 
             if (process.ExitCode != 0)
             {
-                AppLogger.Error($"pyftsubset failed for {font.FilePath}: {stderr}");
+                var stdout = await stdoutTask;
+                AppLogger.Error($"pyftsubset failed for {font.FilePath}: {stderr}\n{stdout}");
                 return null;
             }
 

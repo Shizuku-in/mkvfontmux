@@ -5,6 +5,8 @@ namespace MkvFontMux;
 
 internal static class AssParser
 {
+    private static readonly Regex NewLineRegex = new(@"\\[Nn]", RegexOptions.Compiled);
+    private static readonly Regex OverrideTagRegex = new(@"\{.*?\}", RegexOptions.Compiled);
     public static IReadOnlyDictionary<string, HashSet<char>> Parse(string filepath)
     {
         var textByFont = new Dictionary<string, HashSet<char>>(StringComparer.OrdinalIgnoreCase);
@@ -67,9 +69,8 @@ internal static class AssParser
 
     private static string RegexClean(string text)
     {
-        var cleaned = text;
-        cleaned = Regex.Replace(cleaned, "\\\\N|\\\\n", string.Empty);
-        cleaned = Regex.Replace(cleaned, "\\{.*?\\}", string.Empty);
+        var cleaned = NewLineRegex.Replace(text, string.Empty);
+        cleaned = OverrideTagRegex.Replace(cleaned, string.Empty);
         return cleaned;
     }
 }

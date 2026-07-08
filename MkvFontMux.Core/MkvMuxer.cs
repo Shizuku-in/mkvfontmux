@@ -48,6 +48,7 @@ internal static class MkvMuxer
             }
 
             var stderrTask = process.StandardError.ReadToEndAsync();
+            var stdoutTask = process.StandardOutput.ReadToEndAsync();
             await process.WaitForExitAsync();
             var stderr = await stderrTask;
 
