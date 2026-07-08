@@ -325,6 +325,11 @@ internal sealed class FontManager(IReadOnlyList<string>? customDirectories = nul
         return (int)fontCount;
     }
 
+    private static readonly HashSet<string> ValidSfntTags = new(StringComparer.Ordinal)
+    {
+        "true", "OTTO", "typ1"
+    };
+
     private static bool TryGetSfntOffset(Stream stream, int fontIndex, out uint sfntOffset)
     {
         sfntOffset = 0;
@@ -335,9 +340,15 @@ internal sealed class FontManager(IReadOnlyList<string>? customDirectories = nul
             return false;
         }
 
+        // TrueType 1.0 magic: 0x00010000 — raw bytes, won't decode as a readable ASCII tag.
+        // Re-read as uint32 to catch it.
+        stream.Position = 0;
+        var sfntVersion = ReadUInt32BigEndian(stream);
+        var isTrueTypeV1 = sfntVersion == 0x00010000u;
+
         if (!string.Equals(tag, "ttcf", StringComparison.Ordinal))
         {
-            return fontIndex == 0;
+            return isTrueTypeV1 || ValidSfntTags.Contains(tag) ? fontIndex == 0 : false;
         }
 
         _ = ReadUInt32BigEndian(stream);
