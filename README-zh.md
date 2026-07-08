@@ -67,11 +67,11 @@ dotnet run --project MkvFontMux.Gui
 
 | Order | Keyword                                                            | Code                                    |
 | ----- | ------------------------------------------------------------------ | --------------------------------------- |
-| 1     | `sc`, `chs`, `zhs`, `zh-cn`, `gb`, `gbk`, `gb2312`, `简体`, `简中` | `chi`                                   |
-| 2     | `tc`, `cht`, `zht`, `zh-tw`, `big5`, `繁体`, `繁中`                | `cht`                                   |
+| 1     | `sc`, `chs`, `zhs`, `zh-cn`, `gb`, `gbk`, `gb2312`, `简体`, `简中` | `zh-Hans`                               |
+| 2     | `tc`, `cht`, `zht`, `zh-tw`, `big5`, `繁体`, `繁中`                | `zh-Hant`                               |
 | 3     | `en`, `eng`, `english`, `英文`, `英字`                             | `eng`                                   |
 | 4     | `jp`, `ja`, `jpn`, `japanese`, `日文`, `日语`, `日字`              | `jpn`                                   |
-| 5     | 未命中                                                             | `--subtitle-language` 的值 (默认 `chi`) |
+| 5     | 未命中                                                             | `--subtitle-language` 的值 (默认 `zh-Hans`) |
 
 # 许可证
 
