@@ -112,8 +112,9 @@ internal sealed class FontIndexCache
                 }
             }
         }
-        catch
+        catch (Exception ex)
         {
+            AppLogger.Warning($"Failed to save font index cache: {ex.Message}");
         }
     }
 
