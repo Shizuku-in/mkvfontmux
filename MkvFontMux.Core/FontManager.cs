@@ -457,7 +457,15 @@ internal sealed class FontManager(IReadOnlyList<string>? customDirectories = nul
             EnsureCodePagesRegistered();
             try
             {
-                return Encoding.GetEncoding(10000).GetString(raw).Trim('\0');
+                var codePage = encodingId switch
+                {
+                    1 => 932,   // Shift-JIS
+                    2 => 950,   // Big5
+                    3 => 949,   // EUC-KR
+                    25 => 936,  // GB2312
+                    _ => 10000  // MacRoman
+                };
+                return Encoding.GetEncoding(codePage).GetString(raw).Trim('\0');
             }
             catch
             {
